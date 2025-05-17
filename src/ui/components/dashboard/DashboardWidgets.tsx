@@ -224,6 +224,18 @@ export const FrequentWorkflowsWidget: React.FC = () => (
 // Analytics Widget
 export const AnalyticsWidget: React.FC<DashboardItemsContext> = ({ workflows, isLoading }) => {
   const [analyticsView, setAnalyticsView] = useState<'summary' | 'chart'>('summary');
+  const [totalTimeSavedSeconds, setTotalTimeSavedSeconds] = useState<number>(0);
+
+  useEffect(() => {
+    let mounted = true;
+    window.electron.getTimeSavedSeconds()
+      .then(res => {
+        if (mounted && res.success) setTotalTimeSavedSeconds(res.timeSavedSeconds || 0);
+      })
+      .catch(() => { if (mounted) setTotalTimeSavedSeconds(0); });
+    return () => { mounted = false; };
+  }, []);
+
   const recentWorkflows = useMemo(() => {
     return [...(workflows || [])]
       .sort((a, b) => {
@@ -258,8 +270,6 @@ export const AnalyticsWidget: React.FC<DashboardItemsContext> = ({ workflows, is
     let mostLaunchedWorkflowId = null;
     let mostLaunchedWorkflowName = null;
     let mostLaunchedWorkflowCount = 0;
-    // Time saved (mocked as 0)
-    const totalTimeSavedSeconds = 0;
     return {
       totalWorkflow,
       favoriteWorkflow,
@@ -272,7 +282,7 @@ export const AnalyticsWidget: React.FC<DashboardItemsContext> = ({ workflows, is
       mostLaunchedWorkflowCount,
       totalTimeSavedSeconds
     };
-  }, [workflows]);
+  }, [workflows, totalTimeSavedSeconds]);
 
   const getChartColorForType = (type: string): string => {
     const colorMap: {[key: string]: string} = {

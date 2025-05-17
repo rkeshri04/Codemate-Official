@@ -157,6 +157,7 @@ contextBridge.exposeInMainWorld('electron', {
 
   // Add this line to expose trending/news fetch to renderer
   getTrendingContent: () => ipcRenderer.invoke('getTrendingContent'),
+  getTimeSavedSeconds: () => ipcRenderer.invoke('getTimeSavedSeconds'),
 });
 
 // Set up listeners for menu actions

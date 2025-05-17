@@ -489,7 +489,11 @@ export async function executeWorkflowFromStore(workflowId: string, store: Store<
         success: result.success,
         message: result.message
       });
-      if (!result.success) {
+      if (result.success) {
+        // --- Increment timeSavedSeconds in store by 10 ---
+        const prev = store.get('timeSavedSeconds', 0);
+        store.set('timeSavedSeconds', prev + 10);
+      } else {
         hasError = true;
       }
     } catch (commandError: any) {
@@ -863,6 +867,13 @@ export function setupCommandHandlers(mainWindow: BrowserWindow, store: Store<any
       }
     }
     return trendingData;
+  });
+
+  // --- Add IPC handler to get total time saved ---
+  ipcMain.removeHandler('getTimeSavedSeconds');
+  ipcMainHandle('getTimeSavedSeconds' as any, async () => {
+    const timeSavedSeconds = store.get('timeSavedSeconds', 0);
+    return { success: true, timeSavedSeconds };
   });
 }
 

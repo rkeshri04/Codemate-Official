@@ -129,6 +129,7 @@ type CommandExecutionData = {
 interface StoreSchema {
   user?: User;
   workflows?: Workflow[];
+  timeSavedSeconds?: number; // <-- Add this line
 }
 
 interface Window {
@@ -201,6 +202,7 @@ interface Window {
       getWorkflowsForTrayMenu: () => Promise<{ success: boolean; workflows: Workflow[]; message?: string }>;
       executeWorkflowFromTray: (workflowId: string) => Promise<WorkflowRunResult>; 
       onWorkflowStepUpdate: (callback: (data: { commandId: string | null }) => void) => () => void; 
+      getTimeSavedSeconds: () => Promise<{ success: boolean; timeSavedSeconds: number }>; // <-- Add this line
     };
 }
   
