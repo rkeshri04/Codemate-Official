@@ -5,6 +5,10 @@ import { FaFire } from 'react-icons/fa';
 import { executeWorkflow } from '../../../services/commandHandler';
 import { useNavigate } from 'react-router-dom';
 import { FiExternalLink, FiStar, FiGitBranch } from 'react-icons/fi';
+import { FiTerminal, FiGithub, FiDatabase, FiCloud, FiEdit, FiZap, FiGlobe, FiSettings, FiCode, FiMonitor, FiSearch, FiBook, FiCalendar, FiMail, FiBarChart2, FiClipboard, FiX } from 'react-icons/fi';
+import { FaDocker, FaSlack, FaTrello, FaFigma } from 'react-icons/fa';
+import { v4 as uuidv4 } from 'uuid';
+import ToolsCard from './widgets/ToolsCard';
 
 export const RecentWorkflowsWidget: React.FC<DashboardItemsContext> = ({ workflows, isLoading }) => {
   const [runningWorkflowId, setRunningWorkflowId] = useState<string | null>(null);
@@ -84,7 +88,6 @@ export const RecentWorkflowsWidget: React.FC<DashboardItemsContext> = ({ workflo
 );
 };
 
-// Trending Widget
 export const TrendingWidget: React.FC = () => {
   const [trending, setTrending] = useState<{ repos: Repository[]; news: NewsItem[]; lastUpdated?: number | string } | null>(null);
   const [loading, setLoading] = useState(true);
@@ -211,15 +214,6 @@ export const TrendingWidget: React.FC = () => {
     </div>
   );
 };
-
-// Frequent Workflows Widget
-export const FrequentWorkflowsWidget: React.FC = () => (
-  <div className="widget frequent-workflows-widget">
-    <div className="empty-widget-state">
-      <p>New feature dropping soon...</p>
-    </div>
-  </div>
-);
 
 // Analytics Widget
 export const AnalyticsWidget: React.FC<DashboardItemsContext> = ({ workflows, isLoading }) => {
@@ -420,3 +414,6 @@ export const AnalyticsWidget: React.FC<DashboardItemsContext> = ({ workflows, is
     </div>
   );
 };
+
+// Export ToolsCard for use in other parts of the app
+export { ToolsCard };

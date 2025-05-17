@@ -1,0 +1,91 @@
+.tools-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(110px, 1fr));
+  gap: 12px;
+  margin-top: 12px;
+}
+.tool-btn {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  background: var(--card-bg, #fff);
+  border: 1px solid var(--border-color, #eee);
+  border-radius: 10px;
+  padding: 16px;
+  margin: 4px;
+  min-width: 90px;
+  min-height: 90px;
+  cursor: pointer;
+  transition: box-shadow 0.15s;
+  box-shadow: 0 1px 4px rgba(0,0,0,0.04);
+  color: var(--text-color);
+  font-size: 1em;
+}
+.tool-btn:focus {
+  outline: 2px solid var(--primary-color, #4299e1);
+}
+.tool-btn-primary {
+  background: var(--primary-color);
+  color: #fff;
+  border: none;
+  border-radius: 6px;
+  padding: 6px 14px;
+  margin-right: 6px;
+  font-size: 1em;
+  font-weight: 500;
+  cursor: pointer;
+  transition: background 0.15s;
+}
+.tool-btn-primary.active,
+.tool-btn-primary:hover {
+  background: color-mix(in srgb, var(--primary-color) 80%, #222 10%);
+}
+.tool-btn-secondary {
+  background: var(--border-color, #eee);
+  color: var(--text-color, #222);
+  border: none;
+  border-radius: 6px;
+  padding: 6px 14px;
+  font-size: 1em;
+  cursor: pointer;
+  transition: background 0.15s;
+}
+.tool-btn-secondary:hover {
+  background: var(--secondary-color, #e0e0e0);
+}
+.tool-label {
+  font-weight: 500;
+  margin-bottom: 4px;
+  color: var(--text-color);
+}
+.tool-row {
+  display: flex;
+  gap: 8px;
+  align-items: center;
+  margin-bottom: 8px;
+}
+.tool-input {
+  background: var(--input-bg, #fff);
+  color: var(--input-text, #222);
+  border: 1px solid var(--border-color, #eee);
+  border-radius: 6px;
+  padding: 6px 10px;
+  font-size: 1em;
+  font-family: inherit;
+  flex: 1;
+  min-width: 0;
+  resize: vertical;
+}
+textarea.tool-input {
+  min-height: 60px;
+  max-height: 180px;
+}
+input.tool-input {
+  height: 32px;
+}
+@media (max-width: 600px) {
+  .tools-grid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
