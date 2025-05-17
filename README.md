@@ -1,7 +1,6 @@
-# **Codemate \- Your Productivity Powerhouse**
+# **Codemate - Your Productivity Powerhouse**
 
-**Codemate** is a lightweight, free, and open-source utility application designed to streamline your workflow and boost your productivity. It helps you quickly launch applications, execute terminal commands, open websites, manage Docker containers, capture screenshots, access clipboard history, and automate custom actions.
-
+**Codemate** is a lightweight, free, and open-source utility application designed to streamline your workflow and boost your productivity. It helps you quickly launch applications, execute terminal commands, open websites, manage Docker containers, capture screenshots and access clipboard history
 ## **Features**
 
 * **Application Launcher:** Quickly launch your favorite applications with simple shortcuts.  
@@ -15,10 +14,6 @@
 * **Forever Free:** This application will always be free to use.  
 * **No Ads, No Data Selling:** Your privacy is important. We don't display ads or sell your data.
 
-## **Screenshots**
-
-*\[Include screenshots of the application's UI here. Showcase the main features, such as the launcher, settings, and any unique elements. Good screenshots make a big difference\!\]*
-
 ## **Installation**
 
 ### **Prerequisites**
@@ -30,7 +25,7 @@
 
 ### **Download**
 
-You can download the latest version of Codemate from the [GitHub Releases page](https://github.com/yourusername/yourrepository/releases).
+You can download the latest version of Codemate from the [Official Website](https://github.com/yourusername/yourrepository/releases).
 
 ### **Installation Instructions**
 

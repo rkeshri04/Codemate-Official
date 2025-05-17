@@ -34,14 +34,12 @@ export function Dashboard() {
   const navigate = useNavigate();
   const location = useLocation();
 
-  // --- Fetching and State Management Logic (Local Only) ---
   useEffect(() => {
     let isMounted = true;
     const fetchWorkflows = async () => {
       if (!isMounted) return;
       try {
         setIsLoading(true);
-        // Only fetch workflows locally
         const workflowsResponse = await window.electron.getUserWorkflows();
         if (!isMounted) return;
         if (workflowsResponse.success && workflowsResponse.workflows) setWorkflows(workflowsResponse.workflows);

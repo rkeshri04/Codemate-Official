@@ -4,8 +4,8 @@ import { FiClock, FiPlay, FiTrendingUp, FiList } from 'react-icons/fi';
 import { FaFire } from 'react-icons/fa';
 import { executeWorkflow } from '../../../services/commandHandler';
 import { useNavigate } from 'react-router-dom';
+import { FiExternalLink, FiStar, FiGitBranch } from 'react-icons/fi';
 
-// Recent Workflows Widget
 export const RecentWorkflowsWidget: React.FC<DashboardItemsContext> = ({ workflows, isLoading }) => {
   const [runningWorkflowId, setRunningWorkflowId] = useState<string | null>(null);
   const navigate = useNavigate();
@@ -81,20 +81,132 @@ export const RecentWorkflowsWidget: React.FC<DashboardItemsContext> = ({ workflo
         )}
       </div>
     </div>
-  );
+);
 };
 
 // Trending Widget
 export const TrendingWidget: React.FC = () => {
-  // Trending content is no longer available (API removed)
-  // Show a static message or mock data if desired
+  const [trending, setTrending] = useState<{ repos: Repository[]; news: NewsItem[]; lastUpdated?: number | string } | null>(null);
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    let mounted = true;
+    setLoading(true);
+    (window.electron as any).getTrendingContent
+      ? (window.electron as any).getTrendingContent()
+          .then((data: any) => {
+            if (mounted) {
+              setTrending(data);
+              setLoading(false);
+            }
+          })
+          .catch(() => {
+            if (mounted) {
+              setTrending(null);
+              setLoading(false);
+            }
+          })
+      : window.electron.ipcRenderer && (window.electron.ipcRenderer as any).invoke &&
+        (window.electron.ipcRenderer as any).invoke('getTrendingContent')
+          .then((data: any) => {
+            if (mounted) {
+              setTrending(data);
+              setLoading(false);
+            }
+          })
+          .catch(() => {
+            if (mounted) {
+              setTrending(null);
+              setLoading(false);
+            }
+          });
+    return () => { mounted = false; };
+  }, []);
+
+  const repos = trending?.repos || [];
+  const news = trending?.news || [];
+  const lastUpdated = trending?.lastUpdated
+    ? new Date(trending.lastUpdated).toLocaleString()
+    : null;
+
+  // Type guards
+  function isRepo(item: any): item is Repository {
+    return typeof item.name === 'string' && typeof item.owner === 'string';
+  }
+  function isNews(item: any): item is NewsItem {
+    return typeof item.title === 'string' && typeof item.source === 'string';
+  }
+
+  // Interleave repos and news for display
+  const interleaved: ({ type: 'repo'; data: Repository } | { type: 'news'; data: NewsItem })[] = [];
+  const maxLen = Math.max(repos.length, news.length);
+  for (let i = 0; i < maxLen; i++) {
+    if (i < repos.length) interleaved.push({ type: 'repo', data: repos[i] });
+    if (i < news.length) interleaved.push({ type: 'news', data: news[i] });
+  }
+
   return (
     <div className="widget trending-widget">
       <h2><FaFire className="widget-icon" /> Trending</h2>
-      <div className="widget-content">
-        <div className="empty-widget-state">
-          <p>Trending content is not available in offline/local mode.</p>
-        </div>
+      <div className="widget-content trending-content">
+        {loading ? (
+          <div className="loading-trending">
+            <div className="spinner" />
+            <span>Loading trending content...</span>
+          </div>
+        ) : interleaved.length === 0 ? (
+          <div className="empty-trending empty-widget-state">
+            <p>No trending content available.</p>
+          </div>
+        ) : (
+          <div className="dashboard-list">
+            {interleaved.map((item, idx) =>
+              item.type === 'repo' && isRepo(item.data) ? (
+                <div className="repo-item" key={`repo-${item.data.url}-${idx}`}>
+                  <div className="repo-header">
+                    <h4>
+                      <span className="repo-icon"><FaFire /></span>
+                      <a href={item.data.url} target="_blank" rel="noopener noreferrer" className="visit-link" title={item.data.name}>
+                        {item.data.owner}/{item.data.name}
+                        <FiExternalLink style={{ marginLeft: 4, fontSize: '0.9em' }} />
+                      </a>
+                    </h4>
+                    {item.data.language && (
+                      <span className="repo-language">{item.data.language}</span>
+                    )}
+                  </div>
+                  <div className="repo-description">{item.data.description}</div>
+                  <div className="repo-stats">
+                    <span className="stat"><FiStar className="stat-icon" />{item.data.stars}</span>
+                    <span className="stat"><FiGitBranch className="stat-icon" />{item.data.forks}</span>
+                  </div>
+                </div>
+              ) : item.type === 'news' && isNews(item.data) ? (
+                <div className="news-item" key={`news-${item.data.url}-${idx}`}>
+                  <div className="news-header">
+                    <h4>
+                      <span className="news-icon"><FaFire /></span>
+                      <a href={item.data.url} target="_blank" rel="noopener noreferrer" className="visit-link" title={item.data.title}>
+                        {item.data.title}
+                        <FiExternalLink style={{ marginLeft: 4, fontSize: '0.9em' }} />
+                      </a>
+                    </h4>
+                  </div>
+                  <div className="news-description">{item.data.description}</div>
+                  <div className="news-footer">
+                    <span className="news-source">{item.data.source}</span>
+                    <span>{item.data.published_at ? new Date(item.data.published_at).toLocaleDateString() : ''}</span>
+                  </div>
+                </div>
+              ) : null
+            )}
+          </div>
+        )}
+        {lastUpdated && (
+          <div className="mock-data-notice" style={{ marginTop: 4 }}>
+            Last updated: {lastUpdated}
+          </div>
+        )}
       </div>
     </div>
   );

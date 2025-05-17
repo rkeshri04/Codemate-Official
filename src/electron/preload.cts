@@ -154,6 +154,9 @@ contextBridge.exposeInMainWorld('electron', {
 
   // Run a workflow by ID
   runWorkflow: (id: string) => ipcRenderer.invoke('runWorkflow', { id }),
+
+  // Add this line to expose trending/news fetch to renderer
+  getTrendingContent: () => ipcRenderer.invoke('getTrendingContent'),
 });
 
 // Set up listeners for menu actions

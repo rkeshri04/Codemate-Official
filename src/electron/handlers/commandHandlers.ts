@@ -511,6 +511,207 @@ export async function executeWorkflowFromStore(workflowId: string, store: Store<
   };
 }
 
+// --- Trending/news fetching logic ---
+const TRENDING_CACHE_KEY = 'trendingContent';
+const TRENDING_CACHE_DURATION_MS = 5 * 60 * 60 * 1000; // 5 hours
+
+const EXCLUDE_KEYWORDS = ["tutorial", "course", "bootcamp", "beginner"];
+
+function isEnglish(text: string): boolean {
+  if (!text) return true;
+  try {
+    return /^[\x00-\x7F]*$/.test(text);
+  } catch {
+    return false;
+  }
+}
+
+function containsExcludedKeywords(text: string): boolean {
+  if (!text) return false;
+  const textLower = text.toLowerCase();
+  return EXCLUDE_KEYWORDS.some(word => textLower.includes(word));
+}
+
+function getMockRepos() {
+  return [];
+}
+function getMockNews() {
+  return [];
+}
+
+function interleaveData(repos: any[], news: any[]) {
+  const result = [];
+  const maxLength = Math.max(repos.length, news.length);
+  for (let i = 0; i < maxLength; i++) {
+    if (i < repos.length) result.push(repos[i]);
+    if (i < news.length) result.push(news[i]);
+  }
+  return result;
+}
+
+// Use fetch API (node-fetch for Node <18, else global fetch)
+let fetchFn: typeof fetch;
+try {
+  fetchFn = global.fetch ? global.fetch.bind(global) : require('node-fetch');
+} catch {
+  fetchFn = require('node-fetch');
+}
+
+// Helper for fetch with timeout using AbortController
+async function fetchWithTimeout(resource: string, options: any = {}, timeoutMs = 10000): Promise<Response> {
+  const controller = new (globalThis.AbortController || require('abort-controller'))();
+  const id = setTimeout(() => controller.abort(), timeoutMs);
+  try {
+    const resp = await fetchFn(resource, { ...options, signal: controller.signal });
+    return resp;
+  } finally {
+    clearTimeout(id);
+  }
+}
+
+async function fetchGithubTrending(): Promise<any[]> {
+  // Optionally, get a GitHub token from env for higher rate limits
+  const githubToken = process.env.GITHUB_TOKEN || '';
+  const headers: any = { "Accept": "application/vnd.github.v3+json" };
+  if (githubToken) headers["Authorization"] = `token ${githubToken}`;
+  const sinceDate = new Date(Date.now() - 7 * 24 * 60 * 60 * 1000).toISOString().slice(0, 10);
+  const query = `created:>=${sinceDate}`;
+  try {
+    const url = `https://api.github.com/search/repositories?q=${encodeURIComponent(query)}&sort=stars&order=desc&per_page=15`;
+    const resp = await fetchWithTimeout(url, { headers }, 10000);
+    if (!resp.ok) return [];
+    const data = await resp.json();
+    const filtered: any[] = [];
+    for (const repo of data.items || []) {
+      const name = repo.name;
+      const desc = repo.description || "";
+      if (
+        isEnglish(name) && isEnglish(desc) &&
+        !containsExcludedKeywords(name) && !containsExcludedKeywords(desc)
+      ) {
+        filtered.push({
+          name,
+          owner: repo.owner?.login,
+          description: desc || "No description provided",
+          stars: repo.stargazers_count,
+          forks: repo.forks_count,
+          language: repo.language,
+          url: repo.html_url
+        });
+      }
+      if (filtered.length >= 5) break;
+    }
+    return filtered;
+  } catch (e) {
+    return getMockRepos();
+  }
+}
+
+async function fetchHackerNews(): Promise<any[]> {
+  async function fetchHNItem(itemId: number) {
+    try {
+      const url = `https://hacker-news.firebaseio.com/v0/item/${itemId}.json`;
+      const resp = await fetchWithTimeout(url, {}, 5000);
+      if (!resp.ok) return null;
+      return await resp.json();
+    } catch { return null; }
+  }
+  try {
+    const topResp = await fetchWithTimeout("https://hacker-news.firebaseio.com/v0/topstories.json", {}, 10000);
+    if (!topResp.ok) return [];
+    const topIds: number[] = (await topResp.json()).slice(0, 40);
+    const stories = await Promise.all(topIds.map(fetchHNItem));
+    const filtered: any[] = [];
+    for (const story of stories) {
+      if (!story || story.type !== "story") continue;
+      const title = story.title || "";
+      const url = story.url || "";
+      if (isEnglish(title) && !containsExcludedKeywords(title)) {
+        filtered.push({
+          title,
+          source: "Hacker News",
+          description: "No description available",
+          url,
+          published_at: new Date((story.time || 0) * 1000).toISOString()
+        });
+      }
+      if (filtered.length >= 3) break;
+    }
+    return filtered;
+  } catch { return []; }
+}
+
+async function fetchDevTo(): Promise<any[]> {
+  try {
+    const resp = await fetchWithTimeout("https://dev.to/api/articles?per_page=10&top=7", {}, 10000);
+    if (!resp.ok) return [];
+    const articles = await resp.json();
+    const filtered: any[] = [];
+    for (const article of articles) {
+      const title = article.title || "";
+      const desc = article.description || "";
+      const url = article.url || "";
+      if (isEnglish(title) && !containsExcludedKeywords(title)) {
+        filtered.push({
+          title,
+          source: "Dev.to",
+          description: desc || "No description available",
+          url,
+          published_at: article.published_at || ""
+        });
+      }
+      if (filtered.length >= 2) break;
+    }
+    return filtered;
+  } catch { return []; }
+}
+
+async function fetchRedditProgramming(): Promise<any[]> {
+  try {
+    const headers = { "User-Agent": "CodemateBot/0.1" };
+    const resp = await fetchWithTimeout("https://www.reddit.com/r/programming/hot.json?limit=10", { headers }, 10000);
+    if (!resp.ok) return [];
+    const posts = (await resp.json()).data?.children || [];
+    const filtered: any[] = [];
+    for (const post of posts) {
+      const data = post.data || {};
+      const title = data.title || "";
+      const url = "https://reddit.com" + (data.permalink || "");
+      if (isEnglish(title) && !containsExcludedKeywords(title)) {
+        filtered.push({
+          title,
+          source: "Reddit r/programming",
+          description: data.selftext || "No description available",
+          url,
+          published_at: new Date((data.created_utc || 0) * 1000).toISOString()
+        });
+      }
+      if (filtered.length >= 2) break;
+    }
+    return filtered;
+  } catch { return []; }
+}
+
+async function fetchProgrammingNews(): Promise<any[]> {
+  const [hn, devto, reddit] = await Promise.all([
+    fetchHackerNews(),
+    fetchDevTo(),
+    fetchRedditProgramming()
+  ]);
+  let news = [...hn, ...devto, ...reddit];
+  news = news.sort((a, b) => String(b.published_at || "").localeCompare(String(a.published_at || "")));
+  return news.slice(0, 5);
+}
+
+async function fetchTrendingAndNews(): Promise<{repos: any[], news: any[]}> {
+  const [repos, news] = await Promise.all([
+    fetchGithubTrending(),
+    fetchProgrammingNews()
+  ]);
+  return { repos, news };
+}
+
+// --- Trending/news storage and IPC handler ---
 export function setupCommandHandlers(mainWindow: BrowserWindow, store: Store<any>) {
   // Remove existing handlers before registering new ones to avoid duplicates
   ipcMain.removeHandler('executeCommand');
@@ -618,8 +819,6 @@ export function setupCommandHandlers(mainWindow: BrowserWindow, store: Store<any
     return await executeWorkflowFromStore(workflowId, store, mainWindow);
   });
 
-  // 'open-terminal' is an event, not a handler, so no need to removeHandler
-
   ipcMain.removeHandler('getSystemStats');
   ipcMainHandle('getSystemStats', async () => {
     try {
@@ -628,6 +827,42 @@ export function setupCommandHandlers(mainWindow: BrowserWindow, store: Store<any
     } catch (error) {
       return { success: false, message: 'Failed to get system stats' };
     }
+  });
+
+  // --- Trending/news IPC handler ---
+  const trendingHandlerKey = 'getTrendingContent';
+  const trendingStoreKey = TRENDING_CACHE_KEY;
+
+  // Remove existing handler if any
+  try { ipcMain.removeHandler(trendingHandlerKey); } catch {}
+
+  ipcMainHandle(trendingHandlerKey as any, async () => {
+    let trendingData = store.get(trendingStoreKey, null);
+    const now = Date.now();
+    let shouldUpdate = true;
+    if (trendingData && trendingData.lastUpdated) {
+      const last = typeof trendingData.lastUpdated === 'number'
+        ? trendingData.lastUpdated
+        : new Date(trendingData.lastUpdated).getTime();
+      if (now - last < TRENDING_CACHE_DURATION_MS) {
+        shouldUpdate = false;
+      }
+    }
+    if (shouldUpdate) {
+      try {
+        const { repos, news } = await fetchTrendingAndNews();
+        trendingData = {
+          repos,
+          news,
+          lastUpdated: now
+        };
+        store.set(trendingStoreKey, trendingData);
+      } catch {
+        // fallback: keep old data if fetch fails
+        trendingData = trendingData || { repos: [], news: [], lastUpdated: now };
+      }
+    }
+    return trendingData;
   });
 }
 

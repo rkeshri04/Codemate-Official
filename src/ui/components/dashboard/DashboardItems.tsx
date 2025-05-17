@@ -2,6 +2,7 @@ import React from 'react';
 import { useOutletContext } from 'react-router-dom';
 import {
   RecentWorkflowsWidget,
+  TrendingWidget,
   AnalyticsWidget
 } from './DashboardWidgets';
 
@@ -11,7 +12,7 @@ const WorkflowsList: React.FC = ({}) => {
     <div className="dashboard-content-container">
       <div className="dashboard-widgets">
         <RecentWorkflowsWidget workflows={workflows} setWorkflows={setWorkflows} isLoading={isLoading} />
-        {/* <TrendingWidget /> */}
+        <TrendingWidget />
         <AnalyticsWidget workflows={workflows} setWorkflows={setWorkflows} isLoading={isLoading} />
         {/* <FrequentWorkflowsWidget /> */}
       </div>
