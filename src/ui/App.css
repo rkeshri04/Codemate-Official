@@ -1,78 +1,4 @@
-.auth-page {
-  display: flex;
-  min-height: 100vh;
-  background-color: var(--background-color);
-  width: 100vw;
-  height: 100vh;
-  overflow: auto;
-}
 
-/* Custom scrollbar styling */
-.auth-page,
-.auth-form,
-.auth-form-container {
-  scrollbar-width: thin;
-  scrollbar-color: rgba(255,255,255,0.25) var(--background-color);
-}
-
-/* Hide scrollbar by default, show on hover or scroll */
-.auth-page::-webkit-scrollbar,
-.auth-form::-webkit-scrollbar,
-.auth-form-container::-webkit-scrollbar {
-  width: 10px;
-  background: var(--background-color);
-  display: none;
-  transition: opacity 0.2s;
-}
-
-.auth-page:hover::-webkit-scrollbar,
-.auth-form:hover::-webkit-scrollbar,
-.auth-form-container:hover::-webkit-scrollbar,
-.auth-page:active::-webkit-scrollbar,
-.auth-form:active::-webkit-scrollbar,
-.auth-form-container:active::-webkit-scrollbar {
-  display: block;
-}
-
-.auth-page::-webkit-scrollbar-thumb,
-.auth-form::-webkit-scrollbar-thumb,
-.auth-form-container::-webkit-scrollbar-thumb {
-  background: linear-gradient(
-    to bottom,
-    rgba(255,255,255,0.35),
-    rgba(255,255,255,0.15)
-  ), var(--background-color);
-  border-radius: 8px;
-}
-
-.auth-page::-webkit-scrollbar-track,
-.auth-form::-webkit-scrollbar-track,
-.auth-form-container::-webkit-scrollbar-track {
-  background: var(--background-color);
-}
-
-.auth-form {
-  flex: 1;
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
-  align-items: center;
-  padding: 0;
-  width: 100vw;
-  height: 100vh;
-  overflow-y: auto;
-  min-height: 100vh;
-}
-
-.auth-form-container {
-  background: none;
-  padding: 0;
-  border-radius: 0;
-  box-shadow: none;
-  width: 100%;
-  max-width: 100%;
-  transition: none;
-}
 
 h1 {
   text-align: center;
@@ -266,18 +192,4 @@ input:focus {
   text-decoration: underline;
   padding: 0;
   font: inherit;
-}
-
-/* Responsive design */
-@media (max-width: 1000px) {
-  .auth-page {
-    flex-direction: column;
-  }
-  .auth-form {
-    padding: 0.5rem;
-    min-height: 100vh;
-  }
-  .auth-form-container {
-    padding: 0;
-  }
 }

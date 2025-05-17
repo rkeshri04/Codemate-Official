@@ -4,7 +4,7 @@ import { FiX, FiUpload } from 'react-icons/fi';
 import './WorkflowCreationModal.css';
 
 
-const WorkflowCreationModal: React.FC<Omit<WorkflowCreationModalProps, 'authToken'>> = ({ 
+const WorkflowCreationModal: React.FC<WorkflowCreationModalProps> = ({ 
   onClose, 
   onWorkflowCreated
 }) => {
@@ -50,7 +50,6 @@ const WorkflowCreationModal: React.FC<Omit<WorkflowCreationModalProps, 'authToke
     }
     try {
       setIsSubmitting(true);
-      // Use local workflow creation (no token)
       const response = await window.electron.createWorkflow(workflowName);
       if (response.success && response.workflow) {
         if (importedActions && importedActions.length > 0) {

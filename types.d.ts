@@ -29,24 +29,6 @@ type User = {
   name: string;
 };
 
-type AuthResponse = {
-  success: boolean;
-  token?: string;
-  user?: User;
-  message?: string;
-};
-
-type SignUpData = {
-  email: string;
-  password: string;
-  name: string;
-};
-
-type SignInData = {
-  email: string;
-  password: string;
-};
-
 interface SystemInfo {
   totalMemoryMB: number;
 }
@@ -66,9 +48,7 @@ type EventPayloadMapping = {
   signIn: SignInData;
   verifyToken: string;
 
-  saveAuthToken: string;
   checkEmail: { email: string };
-  'restore-auth-token': string;
 
   createWorkflow: { token: string; name: string };
   getUserWorkflows: string;
@@ -103,7 +83,7 @@ type EventPayloadMapping = {
 
   updateWorkflowOrder: { token: string; workflowIds: string[] };
 
-  runWorkflow: { authToken: string; workflowId: string };
+  runWorkflow: { workflowId: string };
 
   updateWorkflowFavorite: {
     token: string;
@@ -134,19 +114,25 @@ type WorkflowRunResult = {
   offline?: boolean; 
 };
 
+type CommandExecutionData = {
+  type: 'app' | 'terminal' | 'url' | 'docker';
+  command: string;
+  workingDirectory?: string;
+  commands?: string[];
+  useTerminalWindow?: boolean;
+  containerId?: string;
+  dockerAction?: 'start' | 'stop';
+};
+
 //Interfaces
 
 interface StoreSchema {
-  authToken?: string;
   user?: User;
   workflows?: Workflow[];
 }
 
 interface Window {
     electron: {
-      signUp: (userData: SignUpData) => Promise<AuthResponse>;
-      signIn: (credentials: SignInData) => Promise<AuthResponse>;
-      verifyToken: (token: string) => Promise<AuthResponse & { potentialOffline?: boolean; offlineMode?: boolean; user?: User }>;
       createWorkflow: (name: string) => Promise<{ success: boolean; workflow?: Workflow; message?: string }>;
       getUserWorkflows: () => Promise<{ success: boolean; workflows?: Workflow[]; message?: string; offline?: boolean }>;
       updateWorkflowVisibility: (token: string, visible: boolean) => Promise<{ success: boolean; message?: string }>;
@@ -171,15 +157,13 @@ interface Window {
       }>;
       selectFile: () => Promise<{ success: boolean; filePath?: string }>;
       selectFolder: () => Promise<{ success: boolean; folderPath?: string }>;
-      runWorkflow: (id: string) => Promise<WorkflowRunResult>; // <-- Update return type
+      runWorkflow: (id: string) => Promise<WorkflowRunResult>;
       onMenuAction: (callback: (action: string) => void) => () => void;
       ipcRenderer: {
         on: (channel: string, callback: (...args: any[]) => void) => () => void;
         send: (channel: string, data?: any) => void;
       };
       deleteWorkflow: (id: string) => Promise<{ success: boolean; message?: string }>;
-      onRestoreAuthToken: (callback: (data: { token: string, user?: User }) => void) => () => void;
-      saveAuthToken: (token: string) => Promise<void>;
       onSystemStatsUpdate: any;
       getSystemStats: () => Promise<{
         success: boolean;
@@ -220,10 +204,9 @@ interface Window {
     };
 }
   
-interface User {
-  id: string;
-  name: string;
-  email: string;
+interface SidebarHeaderProps {
+  sidebarCollapsed: boolean;
+  toggleSidebar: () => void;
 }
 
 interface Workflow {
@@ -285,19 +268,11 @@ interface ConfirmModalProps {
   icon?: React.ReactNode;
 }
 
-interface DashboardProps {
-  user: User | null;
-  // onLogout: () => void;
-}
 
 interface InstalledApp {
   name: string;
   path: string;
   icon?: string;
-}
-
-interface WorkflowDetailProps {
-  authToken: string;
 }
 
 interface WorkflowCreationModalProps {

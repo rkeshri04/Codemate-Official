@@ -4,12 +4,6 @@ import { ipcMainHandle } from '../util.js';
 import { refreshMenu } from '../menu.js';
 import { refreshTray } from '../tray.js';
 
-// Define the store schema type again
-interface StoreSchema {
-  authToken?: string;
-  user?: User;
-  workflows?: Workflow[];
-}
 
 export function setupWorkflowHandlers(mainWindow: BrowserWindow, store: Store<StoreSchema>) {
   // Create a new workflow

@@ -12,22 +12,6 @@ import './WorkflowDetail.css';
 import { DragDropContext, Droppable, Draggable, DropResult } from 'react-beautiful-dnd';
 import { executeWorkflow } from '../../services/commandHandler';
 
-// Add CSS-in-JS for hover effect (or add to your CSS file)
-const actionRowStyle: React.CSSProperties = {
-  display: 'flex',
-  alignItems: 'center',
-  justifyContent: 'center',
-  margin: '0.5rem 0',
-  opacity: 1,
-  transition: 'opacity 0.2s'
-};
-
-const hiddenRowStyle: React.CSSProperties = {
-  ...actionRowStyle,
-  opacity: 0,
-  pointerEvents: 'none'
-};
-
 const ActionModal = React.memo(({
   newCommand, 
   editingCommandId,
@@ -48,7 +32,7 @@ const ActionModal = React.memo(({
   refreshDockerContainers,
   installedApps,
   isLoadingApps,
-  handleAppSelection // This handler now receives the full app object or null
+  handleAppSelection 
 }: {
   newCommand: CommandItem;
   editingCommandId: string | null;
@@ -69,10 +53,10 @@ const ActionModal = React.memo(({
   refreshDockerContainers: () => void;
   installedApps: InstalledApp[];
   isLoadingApps: boolean;
-  handleAppSelection: (app: InstalledApp | null) => void; // Update handler signature
+  handleAppSelection: (app: InstalledApp | null) => void;
 }) => {
   const [isAppDropdownOpen, setIsAppDropdownOpen] = useState(false);
-  const dropdownRef = useRef<HTMLDivElement>(null); // Ref for click outside detection
+  const dropdownRef = useRef<HTMLDivElement>(null);
 
   // Find the selected app details for displaying icon/name
   const selectedApp = installedApps.find(app => app.path === newCommand.command);
@@ -122,7 +106,6 @@ const ActionModal = React.memo(({
           </select>
         </div>
         
-        {/* Conditional rendering for Action Types */}
         {newCommand.type === 'app' ? (
           <div className="form-group">
             <label>Application</label>
@@ -394,7 +377,7 @@ const normalizeUrl = (url: string): string => {
   return url;
 };
 
-const WorkflowDetail: React.FC<WorkflowDetailProps> = () => {
+const WorkflowDetail: React.FC = () => {
   const { id } = useParams<{ id: string }>();  
   const [workflow, setWorkflow] = useState<Workflow | null>(null);
   const [isLoading, setIsLoading] = useState(true);
@@ -839,7 +822,6 @@ const WorkflowDetail: React.FC<WorkflowDetailProps> = () => {
     setExecutionResults({}); 
     
     try {
-      // Use local executeWorkflow (no authToken)
       const backendResult: WorkflowRunResult = await executeWorkflow(id); 
       const newResults: { [id: string]: { success: boolean; message?: string; results?: any } } = {};
       if (backendResult.results && Array.isArray(backendResult.results)) {
@@ -855,7 +837,6 @@ const WorkflowDetail: React.FC<WorkflowDetailProps> = () => {
       }
       setExecutionResults(newResults);
       if (!backendResult.success) {
-        // Optionally show error
       } 
     } catch (error: any) {
       const errorResults: { [id: string]: { success: boolean; message?: string } } = {};

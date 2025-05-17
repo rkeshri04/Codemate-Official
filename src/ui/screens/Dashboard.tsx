@@ -12,7 +12,7 @@ import MainHeader from '../components/window/MainHeader';
 import MainFooter from '../components/window/MainFooter';
 import './Dashboard.css';
 
-export function Dashboard({ user }: DashboardProps) {
+export function Dashboard() {
   const { theme, toggleTheme } = useTheme(); // Keep theme logic if needed at this level
   const [sidebarCollapsed, setSidebarCollapsed] = useState(false);
   const [showWorkflowModal, setShowWorkflowModal] = useState(false);
@@ -220,7 +220,6 @@ export function Dashboard({ user }: DashboardProps) {
         style={{ width: sidebarCollapsed ? '60px' : `${sidebarWidth}px` }}
       >
         <SidebarHeader
-          user={user}
           sidebarCollapsed={sidebarCollapsed}
           toggleSidebar={toggleSidebar}
         />
@@ -247,7 +246,7 @@ export function Dashboard({ user }: DashboardProps) {
       </div>
       {/* Main content */}
       <div className="main-content">
-        <MainHeader user={user} confirmLogout={confirmLogout} />
+        <MainHeader />
         <div className="dashboard-content">
           {/* This is where nested routes will be rendered */}
           <Outlet context={{ workflows, setWorkflows, isLoading }} />

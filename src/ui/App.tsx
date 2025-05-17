@@ -1,4 +1,3 @@
-import { useState } from 'react';
 import { BrowserRouter as Router, Routes, Route, Navigate } from 'react-router-dom';
 import { Dashboard } from './screens/Dashboard';
 import WorkflowsList from './components/dashboard/DashboardItems';
@@ -17,8 +16,6 @@ export default function AppWrapper() {
 }
 
 function App() {
-  const [isAuthenticated, setIsAuthenticated] = useState(false);
-  const [currentUser, setCurrentUser] = useState<User | null>(null);
 
   return (
     <Routes>
@@ -28,13 +25,13 @@ function App() {
       <Route
         path="/"
         element={
-            <Dashboard user={currentUser} />
+            <Dashboard />
         }
       >
         <Route path="dashboard" element={<WorkflowsList />} />
-        <Route path="workflow/:id" element={<WorkflowDetail authToken={localStorage.getItem('authToken') || ''} />} />
+        <Route path="workflow/:id" element={<WorkflowDetail />} />
       </Route>
-      <Route path="*" element={<Navigate to={isAuthenticated ? "/dashboard" : "/"} replace />} />
+      <Route path="*" element={<Navigate to="/dashboard" replace />} />
     </Routes>
   );
 }

@@ -3,10 +3,6 @@ import { contextBridge, ipcRenderer, shell } from 'electron';
 // Get user's preferred color scheme
 const prefersDarkMode = window.matchMedia('(prefers-color-scheme: dark)').matches;
 
-// Set up a listener for token invalidation
-ipcRenderer.on('tokenInvalid', () => {
-  localStorage.removeItem('authToken');
-});
 
 // Listen for menu actions from the main process
 ipcRenderer.on('menu-action', (event, action) => {
@@ -15,7 +11,6 @@ ipcRenderer.on('menu-action', (event, action) => {
 });
 
 contextBridge.exposeInMainWorld('electron', {
-  // Workflow management functions (all local, no auth)
   createWorkflow: (name: string) => ipcRenderer.invoke('createWorkflow', { name }),
   getUserWorkflows: () => ipcRenderer.invoke('getUserWorkflows'),
   getWorkflowById: (id: string) => ipcRenderer.invoke('getWorkflowById', { id }),

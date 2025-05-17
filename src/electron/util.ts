@@ -1,4 +1,5 @@
-import { ipcMain, WebContents } from 'electron';
+import { BrowserWindow, ipcMain, WebContents } from 'electron';
+import Docker from 'dockerode';
 
 export function isDev() {
   return process.env.NODE_ENV === 'development';
@@ -52,15 +53,83 @@ export function getWorkflowsFromStore(store: any): Workflow[] {
   return store.get('workflows', []);
 }
 
+//commandHandlers.ts
 
-// Helper to check for network errors
-export const isNetworkError = (error: any): boolean => {
-  return (
-    error.code === 'ECONNREFUSED' ||
-    error.code === 'ENOTFOUND' ||
-    error.message?.includes('Network Error') ||
-    error.message?.includes('connect ECONNREFUSED') ||
-    error.message?.includes('timeout') ||
-    (error.response === undefined && error.request !== undefined)
-  );
-};
+export function isIdeCommand(command: string): boolean {
+  const idePatterns = [
+    /code/i, // VS Code
+    /visual studio code/i,
+    /vscode/i,
+    /intellij/i, // IntelliJ
+    /webstorm/i, // WebStorm
+    /pycharm/i, // PyCharm
+    /phpstorm/i, // PHPStorm
+    /atom/i, // Atom
+    /sublime/i, // Sublime Text
+    /eclipse/i, // Eclipse
+    /android studio/i // Android Studio
+  ];
+  
+  return idePatterns.some(pattern => pattern.test(command));
+}
+
+const docker = new Docker(); // Uses default socket
+
+// Helper to check if Docker is running
+export async function isDockerRunning(mainWindow?: BrowserWindow): Promise<boolean> {
+  try {
+    await docker.version();
+    return true;
+  } catch (err: any) {
+
+    if (mainWindow) {
+      mainWindow.webContents.send('toast-notification', {
+        type: 'error',
+        message: `Docker check failed: ${err.code || err.message || 'Unknown error'}` 
+      });
+    }
+    return false;
+  }
+}
+
+// Helper to list containers
+export async function listDockerContainers(all = false) {
+  try {
+    const containers = await docker.listContainers({ all });
+    if (process.env.NODE_ENV !== 'production') {
+      console.log('Docker containers:', containers);
+    }
+    return containers.map(c => ({
+      Id: c.Id,
+      Names: c.Names,
+      Image: c.Image,
+      State: c.State,
+      Status: c.Status
+    }));
+  } catch (e) {
+    return [];
+  }
+}
+
+// Helper to start container
+export async function startDockerContainer(containerId: string) {
+  try {
+    const container = docker.getContainer(containerId);
+    await container.start();
+    return { success: true };
+  } catch (e: any) {
+    return { success: false, message: e.message };
+  }
+}
+
+// Helper to stop container
+export async function stopDockerContainer(containerId: string) {
+  try {
+    const container = docker.getContainer(containerId);
+    await container.stop();
+    return { success: true };
+  } catch (e: any) {
+    return { success: false, message: e.message };
+  }
+}
+

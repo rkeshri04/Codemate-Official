@@ -6,7 +6,6 @@ import { createTray } from './tray.js';
 import { createMenu } from './menu.js';
 import { setupContextMenu } from './contextMenu.js';
 import { setupWindowManager } from './windowManager.js';
-// import { setupAuthHandlers } from './handlers/authHandlers.js';
 import { setupWorkflowHandlers } from './handlers/workflowHandler.js';
 import { setupCommandHandlers } from './handlers/commandHandlers.js';
 import { setupScreenshotHandlers, takeAndSaveScreenshot } from './handlers/screenshotHandlers.js';
@@ -108,17 +107,7 @@ app.on('ready', async () => {
   const windowManager = setupWindowManager(mainWindow);
 
   mainWindow.webContents.on('did-finish-load', () => {
-    console.log('[App] MainWindow did-finish-load.');
-    // Check for saved token and user data, send them to the renderer
-    const savedToken = store.get('authToken');
-    const savedUser = store.get('user');
-    if (savedToken) {
-      mainWindow!.webContents.send('restore-auth-token', { token: savedToken, user: savedUser });
-    }
-
-    // Process any cached URL from 'open-url'
     if (openUrlOnReady && mainWindow) {
-      console.log(`[Protocol] Processing cached URL from 'open-url' on did-finish-load: ${openUrlOnReady}`);
       mainWindow.webContents.send('protocol-url', openUrlOnReady);
       openUrlOnReady = null;
     }
@@ -147,7 +136,6 @@ app.on('ready', async () => {
   createMenu(mainWindow, store);
 
   // Setup IPC handlers
-  // setupAuthHandlers(mainWindow, store);
   setupWorkflowHandlers(mainWindow, store);
   setupCommandHandlers(mainWindow, store);
   setupScreenshotHandlers(mainWindow);

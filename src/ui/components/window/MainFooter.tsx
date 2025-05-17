@@ -1,5 +1,5 @@
 import React from 'react';
-import SystemMonitor from './SystemMonitor'; // Assuming SystemMonitor is in the same folder
+import SystemMonitor from './SystemMonitor';
 
 const MainFooter: React.FC = () => {
   return (

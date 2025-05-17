@@ -26,7 +26,7 @@ const SystemMonitor: React.FC = () => {
           setTotalRAM(response.systemInfo.totalMemoryMB);
         } else {
           // Fallback to a reasonable default
-          setTotalRAM(8 * 1024); // 8 GB in MB
+          setTotalRAM(0 * 1024); // 8 GB in MB
         }
       }
     });
