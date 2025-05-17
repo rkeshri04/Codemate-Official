@@ -1,0 +1,25 @@
+{
+  "appId": "com.rishabhkeshri.codemate",
+  "files": [
+    "dist-electron/**/*",
+    "dist-react/**/*",
+    ".env"
+  ],
+  "extraResources": ["dist-electron/preload.cjs", "src/assets/**"],
+  "icon": "./desktopIcon.png",
+  "mac": {
+    "target": "dmg"
+  },
+  "linux": {
+    "target": "AppImage",
+    "category": "Utility"
+  },
+  "win": {
+    "target": ["portable", "msi"]
+  },
+  "publish": {
+    "provider": "github",
+    "owner": "rkeshri",
+    "repo": "your-repo-name"
+  }
+}

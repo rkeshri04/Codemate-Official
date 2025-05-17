@@ -1,0 +1,110 @@
+/* --- ConfirmDeleteModal styles --- */
+.modal-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-color: rgba(0, 0, 0, 0.5);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 1000;
+}
+
+.confirm-delete-modal {
+  background-color: var(--card-bg, #fff);
+  border-radius: 8px;
+  padding: 24px;
+  width: 400px;
+  max-width: 90vw;
+  box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
+}
+
+.confirm-delete-icon {
+  display: flex;
+  justify-content: center;
+  margin-bottom: 16px;
+  color: var(--danger-color, #ff4757);
+}
+
+.confirm-delete-modal h3 {
+  margin: 0 0 16px;
+  text-align: center;
+  color: var(--text-color, #333);
+}
+
+.confirm-delete-modal p {
+  margin: 0 0 24px;
+  text-align: center;
+  color: var(--text-secondary, #666);
+}
+
+.confirm-delete-buttons {
+  display: flex;
+  justify-content: center;
+  gap: 16px;
+}
+
+.cancel-btn:hover {
+  background-color: var(--button-secondary-hover, #d0d0d0);
+}
+
+.delete-btn:hover {
+  background-color: var(--danger-hover-color, #ff2a3f);
+}
+
+/* --- LogoutConfirmModal styles --- */
+.logout-modal {
+  max-width: 400px;
+}
+
+.modal-body {
+  margin: 1.5rem 0;
+}
+
+.alert-icon {
+  color: var(--danger-color);
+  margin-right: 0.5rem;
+  vertical-align: middle;
+}
+
+.logout-confirm-btn {
+  background-color: var(--danger-color);
+  color: white;
+  border: none;
+  padding: 0.75rem 1.5rem;
+  border-radius: 8px;
+  font-size: 1rem;
+  font-weight: 500;
+  cursor: pointer;
+  transition: background-color 0.2s;
+}
+
+.logout-confirm-btn:hover {
+  filter: brightness(1.1);
+}
+
+.modal-content.logout-modal {
+  background: var(--card-bg, #fff);
+  border-radius: 8px;
+  padding: 24px;
+  width: 400px;
+  max-width: 90vw;
+  box-shadow: 0 5px 15px rgba(0,0,0,0.2);
+  position: relative;
+}
+
+.modal-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.close-modal-btn {
+  background: none;
+  border: none;
+  color: var(--secondary-color, #888);
+  font-size: 22px;
+  cursor: pointer;
+}

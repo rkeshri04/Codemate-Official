@@ -1,0 +1,924 @@
+.workflow-detail-container {
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  overflow: hidden; /* Prevent container from scrolling */
+  background-color: var(--background-color);
+}
+
+/* Remove the header styles since we're now in nested layout */
+.workflow-detail-content {
+  flex: 1;
+  overflow-y: auto; /* Only this section should scroll if needed */
+}
+
+.commands-section {
+  background-color: var(--card-bg);
+  border-radius: 12px;
+  box-shadow: var(--shadow);
+  padding: 2rem;
+}
+
+.section-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 1.5rem;
+}
+
+.section-header h2 {
+  margin: 0;
+  font-size: 1.4rem;
+  color: var(--text-color);
+}
+
+.workflow-title-section {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  row-gap: 0.5rem;
+  justify-content: space-between;
+  width: 100%;
+}
+
+.workflow-title-main {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  min-width: 0;
+}
+
+.workflow-title-actions {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  min-width: 0;
+}
+
+.run-all-btn {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  background-color: var(--accent-color);
+  color: white;
+  border: none;
+  padding: 0.5rem 1rem;
+  border-radius: 8px;
+  font-size: 0.9rem;
+  font-weight: 500;
+  cursor: pointer;
+  transition: background-color 0.2s;
+  min-width: 0;
+  flex-shrink: 1;
+}
+
+.run-all-btn:hover {
+  filter: brightness(1.1);
+}
+
+.run-all-btn.running {
+  background-color: var(--secondary-color);
+  cursor: not-allowed;
+}
+
+.spin-icon {
+  animation: spin 1s linear infinite;
+}
+
+.execute-btn.running {
+  color: var(--accent-color);
+  cursor: not-allowed;
+}
+
+@keyframes spin {
+  0% { transform: rotate(0deg); }
+  100% { transform: rotate(360deg); }
+}
+
+.add-command-btn {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  background-color: var(--primary-color);
+  color: white;
+  border: none;
+  padding: 0.75rem 1rem;
+  border-radius: 8px;
+  font-size: 0.95rem;
+  font-weight: 500;
+  cursor: pointer;
+  transition: filter 0.2s;
+  min-width: 0;
+  flex-shrink: 1;
+}
+
+.add-command-btn:hover {
+  filter: brightness(1.1);
+}
+
+.export-actions-btn {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  background-color: var(--primary-color);
+  color: white;
+  border: none;
+  padding: 0.75rem 1rem;
+  border-radius: 8px;
+  font-size: 0.95rem;
+  font-weight: 500;
+  cursor: pointer;
+  transition: filter 0.2s;
+  margin-left: 0.5rem;
+  min-width: 0;
+  flex-shrink: 1;
+}
+
+.export-actions-btn:hover {
+  filter: brightness(1.1);
+}
+
+.command-form {
+  background-color: var(--background-color);
+  border-radius: 8px;
+  padding: 1.5rem;
+  margin-bottom: 2rem;
+  border: 1px solid var(--border-color);
+}
+
+.command-form h3 {
+  margin-top: 0;
+  margin-bottom: 1.5rem;
+  font-size: 1.1rem;
+}
+
+.command-form textarea {
+  font-family: monospace;
+  padding: 8px;
+  resize: vertical;
+  width: 100%;
+  min-height: 100px;
+}
+
+.form-group {
+  margin-bottom: 1.25rem;
+}
+
+.form-group label {
+  display: block;
+  margin-bottom: 0.5rem;
+  font-weight: 500;
+}
+
+.form-group input,
+.form-group select,
+.form-group textarea {
+  width: 100%;
+  padding: 0.75rem;
+  border: 1px solid var(--border-color);
+  border-radius: 6px;
+  background-color: var(--input-bg);
+  color: var(--input-text);
+  font-size: 1rem;
+}
+
+.form-group input:focus,
+.form-group select:focus,
+.form-group textarea:focus {
+  outline: none;
+  border-color: var(--primary-color);
+  box-shadow: 0 0 0 2px rgba(74, 144, 226, 0.2);
+}
+
+.command-input-group {
+  display: flex;
+  align-items: center;
+}
+
+.command-input-group input {
+  flex: 1;
+}
+
+.command-card.executing {
+  border-left: 6px solid var(--primary-color, #0ea5e9); /* Thicker, more prominent */
+  background: linear-gradient(90deg, rgba(14,165,233,0.08) 0%, transparent 80%); /* subtle blue highlight */
+  box-shadow: 0 2px 12px 0 rgba(14,165,233,0.08);
+  transition: border-left 0.1s, background 0.2s, box-shadow 0.2s;
+  z-index: 2;
+}
+
+.browse-btn {
+  background-color: var(--border-color);
+  color: var(--text-color);
+  border: none;
+  padding: 0.75rem;
+  border-radius: 6px;
+  margin-left: 0.5rem;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.form-actions {
+  display: flex;
+  justify-content: flex-end;
+  gap: 1rem;
+  margin-top: 2rem;
+}
+
+.cancel-btn {
+  background-color: transparent;
+  color: var(--text-color);
+  border: 1px solid var(--border-color);
+  padding: 0.75rem 1rem;
+  border-radius: 6px;
+  font-size: 0.95rem;
+  cursor: pointer;
+  transition: background-color 0.2s;
+}
+
+.cancel-btn:hover {
+  background-color: var(--border-color);
+}
+
+.save-btn {
+  background-color: var(--primary-color);
+  color: white;
+  border: none;
+  padding: 0.75rem 1.5rem;
+  border-radius: 6px;
+  font-size: 0.95rem;
+  font-weight: 500;
+  cursor: pointer;
+  transition: filter 0.2s;
+}
+
+.save-btn:hover {
+  filter: brightness(1.1);
+}
+
+.save-btn:disabled {
+  background-color: var(--secondary-color);
+  cursor: not-allowed;
+  filter: none;
+}
+
+.commands-list {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+}
+
+.command-card {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  background-color: var(--card-bg);
+  border: 1px solid var(--border-color);
+  border-radius: 8px;
+  padding: 1rem;
+  transition: transform 0.2s, box-shadow 0.2s;
+  position: relative; 
+  padding-bottom: 40px; 
+  margin-bottom: 1rem; 
+  transition: border-left-color 0.3s ease-in-out, box-shadow 0.3s ease-in-out;
+}
+
+
+
+.command-card:hover {
+  transform: translateY(-2px);
+  box-shadow: var(--shadow);
+}
+
+/* Drag and drop styles */
+.command-card.dragging {
+  opacity: 0.9;
+  box-shadow: 0 5px 10px rgba(0, 0, 0, 0.15);
+  background-color: var(--card-bg);
+  border: 2px dashed var(--primary-color);
+  transform: scale(1.02);
+}
+
+.command-info {
+  display: flex;
+  align-items: flex-start; /* Change from center to flex-start */
+  gap: 1rem;
+  flex: 1;
+  overflow: hidden; /* Prevent overflow from pushing buttons */
+  max-width: calc(100% - 110px); /* Reserve space for buttons */
+}
+
+.command-details {
+  flex: 1;
+  overflow: hidden; /* Prevent overflow from pushing buttons */
+}
+
+.command-directory {
+  margin: 0 0 0.25rem;
+  font-family: monospace;
+  font-size: 0.85rem;
+  color: var(--secondary-color);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  max-width: 100%;
+}
+
+.command-type {
+  margin: 0;
+  font-size: 0.8rem;
+  color: var(--secondary-color);
+  font-weight: 500;
+}
+
+.command-actions {
+  display: flex;
+  gap: 0.5rem;
+  min-width: 100px; /* Ensure minimum width for the actions */
+  justify-content: flex-end;
+  align-self: center; /* Vertically center the actions */
+  flex-shrink: 0; /* Prevent the buttons from shrinking */
+}
+
+.execute-btn,
+.edit-btn,
+.delete-btn {
+  background: none;
+  border: none;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0.5rem;
+  border-radius: 6px;
+  cursor: pointer;
+}
+
+.execute-btn {
+  color: var(--primary-color);
+}
+
+.edit-btn {
+  color: var(--secondary-color);
+}
+
+.delete-btn {
+  color: var(--danger-color);
+}
+
+.execute-btn:hover {
+  background-color: rgba(74, 144, 226, 0.1);
+}
+
+.edit-btn:hover {
+  background-color: rgba(108, 117, 125, 0.1);
+}
+
+.delete-btn:hover {
+  background-color: rgba(220, 53, 69, 0.1);
+}
+
+.edit-btn:disabled,
+.execute-btn:disabled,
+.delete-btn:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+.execution-result {
+  margin: 0.5rem 0 0;
+  font-size: 0.8rem;
+  padding: 0.25rem 0.5rem;
+  border-radius: 4px;
+  display: inline-block;
+}
+
+.execution-result.success {
+  color: var(--accent-color);
+  background-color: rgba(40, 167, 69, 0.1);
+}
+
+.execution-result.error {
+  color: var(--danger-color);
+  background-color: rgba(220, 53, 69, 0.1);
+}
+
+.execute-btn.success {
+  color: var(--accent-color);
+}
+
+.execute-btn.error {
+  color: var(--danger-color);
+}
+
+.no-commands {
+  text-align: center;
+  padding: 3rem 0;
+  color: var(--secondary-color);
+}
+
+.loading-container {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  height: 100%;
+  min-height: 300px;
+  color: var(--text-color);
+}
+
+.loading-spinner {
+  border: 4px solid rgba(0, 0, 0, 0.1);
+  border-radius: 50%;
+  border-top: 4px solid var(--primary-color);
+  width: 40px;
+  height: 40px;
+  animation: spin 1s linear infinite;
+  margin-bottom: 1rem;
+}
+
+.error-container {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  height: 100%;
+  min-height: 300px;
+  padding: 2rem;
+  text-align: center;
+}
+
+.error-icon {
+  font-size: 3rem;
+  margin-bottom: 1rem;
+}
+
+.error-container h3 {
+  margin-bottom: 0.5rem;
+  color: var(--danger-color);
+}
+
+.error-container button {
+  margin-top: 1rem;
+  padding: 0.5rem 1rem;
+  background-color: var(--primary-color);
+  color: white;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+}
+
+.workflow-detail-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 1.5rem;
+  padding-bottom: 1rem;
+  border-bottom: 1px solid var(--border-color);
+}
+
+.multi-command-container {
+  margin-top: 5px;
+}
+
+.multi-command-count {
+  font-style: italic;
+  margin-bottom: 8px;
+  color: var(--text-secondary);
+}
+
+.multi-command-list {
+  background-color: rgba(0, 0, 0, 0.05);
+  border-radius: 4px;
+  padding: 8px 12px;
+  max-height: 120px;
+  overflow-y: auto;
+  border-left: 3px solid var(--primary-color);
+}
+
+.multi-command-item {
+  font-family: monospace;
+  margin: 4px 0;
+  white-space: pre-wrap;
+  word-break: break-all;
+}
+
+.terminal-btn {
+  background-color: #444;
+  color: #fff;
+  border: none;
+  border-radius: 4px;
+  margin-right: 6px;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 8px;
+  transition: background-color 0.2s ease;
+}
+
+.terminal-btn:hover {
+  background-color: #555;
+}
+
+.terminal-btn:active {
+  background-color: #333;
+}
+
+@media (max-width: 768px) {
+  .workflow-detail-header {
+    padding: 1rem;
+  }
+  
+  .workflow-detail-content {
+    padding: 1rem;
+  }
+  
+  .commands-section {
+    padding: 1.5rem;
+  }
+  
+  .command-info {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 0.5rem;
+  }
+
+  /* Make action buttons smaller on mobile */
+  .run-all-btn,
+  .add-command-btn,
+  .export-actions-btn {
+    padding: 0.25rem 0.5rem;
+    font-size: 0.75rem;
+    border-radius: 5px;
+    gap: 0.2rem;
+    min-width: unset;
+  }
+  .run-all-btn svg,
+  .add-command-btn svg,
+  .export-actions-btn svg {
+    width: 15px;
+    height: 15px;
+  }
+
+  /* Hide button text, only show icon */
+  .run-all-btn span,
+  .add-command-btn span,
+  .export-actions-btn span {
+    display: none !important;
+  }
+}
+
+/* Action Modal Styles */
+.action-modal-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-color: rgba(0, 0, 0, 0.5);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 1000;
+  backdrop-filter: blur(5px);
+}
+
+.action-modal-content {
+  background-color: var(--card-bg);
+  border-radius: 12px;
+  padding: 2rem;
+  width: 90%;
+  max-width: 550px;
+  box-shadow: var(--shadow);
+  animation: modal-appear 0.3s ease;
+  max-height: 80vh;
+  overflow-y: auto;
+}
+
+@keyframes modal-appear {
+  from {
+    opacity: 0;
+    transform: translateY(-20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.action-modal-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 1.5rem;
+}
+
+.action-modal-header h3 {
+  margin: 0;
+  font-size: 1.4rem;
+}
+
+.close-modal-btn {
+  background: none;
+  border: none;
+  color: var(--text-color);
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0.5rem;
+  border-radius: 50%;
+  transition: background-color 0.2s;
+}
+
+.close-modal-btn:hover {
+  background-color: var(--border-color);
+}
+
+/* Toggle Switch Styles */
+.toggle-switch-container {
+  display: flex;
+  flex-direction: column;
+  margin-bottom: 1.25rem;
+}
+
+.toggle-switch-label {
+  display: flex;
+  align-items: center;
+  font-weight: 500;
+  cursor: pointer;
+  user-select: none;
+}
+
+.toggle-switch {
+  position: relative;
+  display: inline-block;
+  width: 48px;
+  height: 24px;
+  margin-right: 10px;
+}
+
+.toggle-switch input {
+  opacity: 0;
+  width: 0;
+  height: 0;
+}
+
+.toggle-slider {
+  position: absolute;
+  cursor: pointer;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-color: var(--border-color);
+  transition: .3s;
+  border-radius: 24px;
+}
+
+.toggle-slider:before {
+  position: absolute;
+  content: "";
+  height: 18px;
+  width: 18px;
+  left: 3px;
+  bottom: 3px;
+  background-color: white;
+  transition: .3s;
+  border-radius: 50%;
+}
+
+input:checked + .toggle-slider {
+  background-color: var(--primary-color);
+}
+
+input:focus + .toggle-slider {
+  box-shadow: 0 0 1px var(--primary-color);
+}
+
+input:checked + .toggle-slider:before {
+  transform: translateX(24px);
+}
+
+.toggle-switch-container small {
+  margin-top: 0.25rem;
+  color: var(--secondary-color);
+  font-style: italic;
+  font-size: 0.85rem;
+  margin-left: 58px; /* Align with the text after the switch */
+}
+
+/* Custom Dropdown for App Selection */
+.app-selection-container {
+  background-color: "transparent";
+  position: relative; /* Needed for absolute positioning of the dropdown list */
+  width: 100%;
+}
+
+.custom-dropdown-trigger {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  width: 100%;
+  padding: 8px 12px;
+  background-color: var(--input-bg-color);
+  border: 1px solid var(--border-color);
+  border-radius: 4px;
+  cursor: pointer;
+  text-align: left;
+  font-size: 1rem;
+  color: var(--text-color);
+  min-height: 38px; /* Match input height */
+}
+
+.custom-dropdown-trigger:hover {
+  border-color: var(--primary-color-light);
+}
+
+.selected-app-display {
+  display: flex;
+  align-items: center;
+  overflow: hidden; /* Prevent long names from breaking layout */
+  white-space: nowrap;
+  text-overflow: ellipsis;
+  flex-grow: 1;
+  margin-right: 8px;
+}
+
+.selected-app-icon {
+  width: 16px;
+  height: 16px;
+  margin-right: 8px;
+  object-fit: contain; /* Ensure icon aspect ratio is maintained */
+}
+
+.custom-dropdown-list {
+  position: absolute;
+  top: 100%; 
+  left: 0;
+  right: 0;
+  background-color: var(--card-bg); /* Ensure this uses the correct theme variable */
+  border: 1px solid var(--border-color);
+  border-top: none; 
+  border-radius: 0 0 4px 4px;
+  max-height: 150px; 
+  overflow-y: auto; 
+  z-index: 10; 
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+}
+
+.custom-dropdown-item {
+  display: flex;
+  align-items: center;
+  padding: 8px 12px;
+  cursor: pointer;
+  color: var(--text-color); /* Ensure text color is theme-aware */
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.custom-dropdown-item:hover {
+  background-color: var(--hover-bg-color); /* Ensure hover uses theme variable */
+}
+
+.custom-dropdown-item.selected {
+  background-color: var(--primary-color-faded); /* Ensure selected uses theme variable */
+  font-weight: 500;
+}
+
+.custom-dropdown-item.disabled {
+  color: var(--text-color-secondary);
+  cursor: default;
+}
+
+.dropdown-item-icon {
+  width: 16px;
+  height: 16px;
+  margin-right: 8px;
+  flex-shrink: 0; 
+  object-fit: contain;
+}
+
+/* Ensure browse button aligns nicely */
+.app-selection-container .browse-btn {
+  height: 38px; /* Match input height */
+  flex-shrink: 0;
+}
+
+/* Adjust input margin if needed */
+.app-selection-container input[type="text"] {
+   margin-right: 8px;
+}
+
+@media (max-width: 768px) {
+  .workflow-detail-header {
+    padding: 1rem;
+  }
+  
+  .workflow-detail-content {
+    padding: 1rem;
+  }
+  
+  .commands-section {
+    padding: 1.5rem;
+  }
+  
+  .command-info {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 0.5rem;
+  }
+
+  /* Make action buttons smaller on mobile */
+  .run-all-btn,
+  .add-command-btn {
+    padding: 0.35rem 0.7rem;
+    font-size: 0.8rem;
+    border-radius: 6px;
+    gap: 0.3rem;
+  }
+  .run-all-btn svg,
+  .add-command-btn svg {
+    width: 18px;
+    height: 18px;
+  }
+
+  /* Make action buttons smaller on mobile */
+  .run-all-btn,
+  .add-command-btn,
+  .export-actions-btn {
+    padding: 0.25rem 0.5rem;
+    font-size: 0.75rem;
+    border-radius: 5px;
+    gap: 0.2rem;
+    min-width: unset;
+  }
+  .run-all-btn svg,
+  .add-command-btn svg,
+  .export-actions-btn svg {
+    width: 15px;
+    height: 15px;
+  }
+
+  /* Hide button text, only show icon */
+  .run-all-btn span,
+  .add-command-btn span,
+  .export-actions-btn span {
+    display: none !important;
+  }
+}
+
+/* --- New Styles for Bottom Card Actions --- */
+.card-bottom-actions {
+  position: absolute; /* Position relative to the card */
+  bottom: 5px; /* Position it slightly above the bottom edge */
+  left: 0;
+  right: 0;
+  display: flex; /* Use flexbox for layout */
+  justify-content: center; /* Center the buttons */
+  align-items: center;
+  gap: 10px; /* Space between buttons */
+  padding: 5px 0; /* Add some vertical padding */
+  /* background-color: rgba(0, 0, 0, 0.05); Optional subtle background */
+  /* border-top: 1px solid var(--border-color-light); Optional separator */
+  transition: opacity 0.2s ease-in-out; /* Smooth transition if controlled by JS opacity */
+  /* Initially hidden by inline style 'display: none' in the component */
+}
+
+.add-action-below-btn,
+.add-delay-below-btn,
+.duplicate-action-btn {
+  background: var(--button-secondary-bg);
+  color: var(--button-secondary-text);
+  border: 1px solid var(--border-color);
+  padding: 4px 10px;
+  border-radius: 15px; /* Make them pill-shaped */
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  gap: 5px;
+  font-size: 0.8rem;
+  transition: background-color 0.2s, color 0.2s;
+  box-shadow: 0 1px 2px rgba(0,0,0,0.1);
+}
+
+.add-action-below-btn:hover,
+.add-delay-below-btn:hover,
+.duplicate-action-btn:hover {
+  background: var(--button-secondary-hover-bg);
+  color: var(--button-secondary-hover-text);
+  border-color: var(--border-color);
+}
+
+.add-action-below-btn:disabled,
+.add-delay-below-btn:disabled,
+.duplicate-action-btn:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+  background: var(--button-disabled-bg);
+  color: var(--button-disabled-text);
+}
+/* --- End New Styles --- */

@@ -1,0 +1,675 @@
+.dashboard-container {
+  display: flex;
+  height: 100vh; /* Use height instead of min-height */
+  overflow: hidden; /* Prevent container from scrolling */
+  background-color: var(--background-color);
+  transition: background-color 0.3s ease;
+}
+
+/* Sidebar styles */
+.sidebar {
+  height: 100vh;
+  position: relative;
+  box-shadow: var(--shadow);
+  display: flex;
+  flex-direction: column;
+  transition: width 0.3s ease;
+  overflow-x: hidden !important; /* Prevent horizontal scroll */
+  overflow-y: auto;
+  z-index: 10;
+  flex-shrink: 0;
+}
+
+/* Hide scrollbars when sidebar is collapsed */
+.sidebar.collapsed {
+  width: 60px !important;
+  overflow: hidden !important;
+  scrollbar-width: none; /* Firefox */
+}
+
+.sidebar.collapsed::-webkit-scrollbar {
+  display: none !important; /* Chrome, Safari */
+}
+
+.sidebar-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 1rem;
+  border-bottom: 1px solid var(--border-color);
+}
+
+.sidebar-header h3 {
+  margin: 0;
+  font-size: 1.1rem;
+  color: var(--text-color);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  max-width: 80%;
+}
+
+.toggle-sidebar-btn {
+  background: none;
+  border: none;
+  color: var(--text-color);
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0.5rem;
+  border-radius: 50%;
+  transition: background-color 0.2s;
+}
+
+.toggle-sidebar-btn:hover {
+  background-color: var(--border-color);
+}
+
+.sidebar-content {
+  flex: 1;
+  overflow-y: auto;
+  padding: 1rem 0;
+}
+
+.nav-item {
+  padding: 0.75rem 1rem;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  color: var(--text-color);
+  transition: background-color 0.2s;
+}
+
+.nav-item:hover {
+  background-color: var(--border-color);
+}
+
+.nav-item.active {
+  background-color: var(--primary-color);
+  color: white;
+}
+
+
+.sidebar-footer {
+  padding: 1rem;
+  border-top: 1px solid var(--border-color);
+
+}
+
+.add-workflow-btn {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+  width: 100%;
+  padding: 0.75rem;
+  background-color: var(--primary-color);
+  color: white;
+  border: none;
+  border-radius: 8px;
+  font-size: 1rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: background-color 0.2s;
+  
+}
+
+.sidebar.collapsed .add-workflow-btn {
+  height: 40px;
+  width: 40px;
+  padding: 0;
+  border-radius: 50%;
+  margin: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.add-workflow-btn:hover {
+  filter: brightness(1.1);
+}
+
+.sidebar.collapsed .nav-item,
+.sidebar.collapsed .nav-item.active {
+  padding-left: 0.5rem;
+  padding-right: 0.5rem;
+  min-width: 0;
+  width: 60px;
+  justify-content: center;
+}
+
+.sidebar.collapsed .nav-item .nav-icon,
+.sidebar.collapsed .nav-item.active .nav-icon {
+  margin-right: 0;
+}
+
+/* Resize handle for sidebar */
+.resize-handle {
+  width: 5px;
+  height: 100%;
+  background-color: transparent;
+  position: absolute;
+  top: 0;
+  right: 0;
+  cursor: ew-resize;
+}
+
+.resize-handle:hover {
+  background-color: var(--primary-color);
+  opacity: 0.2;
+}
+
+/* Workflow section in sidebar */
+.nav-section {
+  margin: 0.5rem 0;
+}
+
+.nav-section-header {
+  /* Remove old styles, now unused */
+  /* ...deleted... */
+}
+
+/* Unified section header for workflow and clipboard */
+.workflow-header,
+.clipboard-header {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  cursor: pointer;
+  padding: 0.75rem 1rem;
+  color: var(--text-color);
+  transition: background-color 0.2s;
+  border-radius: 6px;
+}
+
+.workflow-header:hover,
+.clipboard-header:hover {
+  background-color: var(--border-color);
+}
+
+/* Hide the old toggle-visibility-btn, now unused */
+.toggle-visibility-btn {
+  display: none !important;
+}
+
+.workflows-container {
+  margin-left: 0.5rem;
+}
+
+.workflow-item {
+  padding: 0.75rem 1rem;
+  font-size: 0.9rem;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.workflow-content {
+  flex: 1;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  cursor: pointer;
+}
+
+/* Make drag handle brighter and more visible */
+.drag-handle {
+  color: var(--text-color);
+  opacity: 0;
+  cursor: grab;
+  display: flex;
+  align-items: center;
+  padding: 6px;
+  margin-left: 8px;
+  border-radius: 4px;
+  transition: all 0.2s;
+}
+
+.workflow-item:hover .drag-handle {
+  opacity: 0.8;
+}
+
+.drag-handle:hover {
+  opacity: 1;
+  background-color: rgba(255, 255, 255, 0.15);
+}
+
+.drag-handle svg {
+  width: 16px;
+  height: 16px;
+}
+
+.drag-handle:active {
+  cursor: grabbing;
+}
+
+/* Workflow menu button */
+.workflow-menu-container {
+  position: relative;
+  z-index: 10; /* Ensure menus appear above other elements */
+}
+
+.workflow-menu-btn {
+  background: none;
+  border: none;
+  color: var(--text-color);
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 6px;
+  border-radius: 4px;
+  opacity: 0;
+  transition: all 0.2s ease;
+  z-index: 11;
+}
+
+.workflow-item:hover .workflow-menu-btn {
+  opacity: 0.8;
+}
+
+.workflow-menu-btn:hover {
+  background-color: rgba(255, 255, 255, 0.15);
+  opacity: 1;
+}
+
+/* Workflow menu dropdown */
+.workflow-menu-dropdown {
+  position: absolute;
+  right: 0;
+  top: 100%;
+  background-color: var(--card-bg);
+  border: 1px solid var(--border-color);
+  border-radius: 6px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+  z-index: 100;
+  min-width: 160px;
+  overflow: hidden;
+}
+
+.workflow-menu-item {
+  display: flex;
+  align-items: center;
+  padding: 10px 14px;
+  color: var(--text-color);
+  cursor: pointer;
+  transition: background-color 0.2s;
+}
+
+.workflow-menu-item:hover {
+  background-color: var(--border-color);
+}
+
+.workflow-menu-item svg {
+  margin-right: 10px;
+}
+
+.workflow-menu-item.danger {
+  color: var(--danger-color);
+}
+
+.workflow-menu-item.danger:hover {
+  background-color: rgba(255, 71, 87, 0.1);
+}
+
+/* Enhance favorite icon styling */
+.favorite-icon {
+  color: gold;
+  margin-right: 8px;
+  font-size: 1.1rem; /* Make it slightly larger */
+  
+}
+
+/* Make favorited workflows more distinct */
+.workflow-item.favorite {
+  border-left: 3px solid gold;
+}
+
+/* Make sure workflow menu buttons are visible */
+.workflow-menu-btn,
+.sidebar-item-menu {
+  background: none;
+  border: none;
+  color: var(--text-color);
+  cursor: pointer;
+  padding: 6px;
+  border-radius: 4px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  opacity: 0;
+  transition: opacity 0.2s ease;
+}
+
+.workflow-item:hover .workflow-menu-btn,
+.sidebar-item:hover .sidebar-item-menu {
+  opacity: 1;
+}
+
+
+
+.workflow-item:hover .delete-workflow-btn {
+  opacity: 0.7;
+}
+
+.delete-workflow-btn:hover {
+  background-color: rgba(255, 71, 87, 0.15);
+  opacity: 1;
+}
+
+.delete-workflow-btn svg {
+  width: 16px; /* Larger icon */
+  height: 16px;
+}
+
+.no-workflows, .loading-workflows {
+  padding: 0.5rem 1.5rem;
+  color: var(--secondary-color);
+  font-size: 0.9rem;
+  font-style: italic;
+}
+
+.nav-icon {
+  margin-right: 0.75rem;
+  font-size: 1.1rem;
+  min-width: 1.1rem;
+}
+
+/* User menu */
+.user-menu-container {
+  position: relative;
+}
+
+.user-avatar-btn {
+  background: none;
+  border: none;
+  cursor: pointer;
+  padding: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  transition: background-color 0.2s;
+}
+
+.user-avatar-btn:hover {
+  background-color: rgba(0, 0, 0, 0.05);
+}
+
+.user-avatar {
+  width: 32px;
+  height: 32px;
+  border-radius: 50%;
+  background-color: var(--primary-color);
+  color: white;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 1rem;
+  font-weight: 600;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.12);
+}
+
+.user-menu {
+  position: absolute;
+  top: calc(100% + 0.5rem);
+  right: 0;
+  background-color: var(--card-bg);
+  border-radius: 8px;
+  box-shadow: var(--shadow);
+  min-width: 200px;
+  z-index: 1000;
+  animation: menuFadeIn 0.2s ease;
+  /* Make sure it's above other elements */
+  pointer-events: auto;
+}
+
+@keyframes menuFadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(-10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.user-info {
+  padding: 1rem;
+}
+
+.user-info h4 {
+  margin: 0 0 0.25rem;
+  font-size: 1rem;
+}
+
+.user-info p {
+  margin: 0;
+  font-size: 0.9rem;
+  color: var(--secondary-color);
+  word-break: break-all;
+}
+
+.menu-divider {
+  height: 1px;
+  background-color: var(--border-color);
+  margin: 0.25rem 0;
+}
+
+.menu-item {
+  display: flex;
+  align-items: center;
+  padding: 0.75rem 1rem;
+  text-align: left;
+  width: 100%;
+  border: none;
+  background: none;
+  color: var(--text-color);
+  cursor: pointer;
+  transition: background-color 0.2s;
+}
+
+.menu-item:hover {
+  background-color: var(--border-color);
+}
+
+.menu-item:last-child {
+  border-radius: 0 0 8px 8px;
+}
+
+.menu-icon {
+  margin-right: 0.75rem;
+}
+
+/* Main content styles */
+.main-content {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  height: 100vh;
+  overflow: hidden; /* Prevent main content from scrolling */
+}
+
+.dashboard-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 1rem 2rem;
+  background-color: var(--header-bg);
+  box-shadow: var(--shadow);
+  z-index: 5;
+  flex-shrink: 0; /* Prevent header from shrinking */
+}
+
+.dashboard-header h1 {
+  margin: 0;
+  font-size: 1.5rem;
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  color: var(--text-color);
+}
+
+.header-icon {
+  color: var(--primary-color);
+}
+
+.header-actions {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+}
+
+.theme-toggle-btn {
+  background: none;
+  border: none;
+  color: var(--text-color);
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0.5rem;
+  border-radius: 50%;
+  transition: background-color 0.2s;
+}
+
+.theme-toggle-btn:hover {
+  background-color: rgba(0, 0, 0, 0.05);
+}
+
+.logout-btn {
+  background-color: var(--danger-color);
+  color: white;
+  border: none;
+  padding: 0.5rem 1rem;
+  border-radius: 8px;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  font-weight: 500;
+  transition: background-color 0.2s;
+}
+
+.logout-btn:hover {
+  filter: brightness(1.1);
+}
+
+.dashboard-content {
+  padding: 2rem;
+  flex: 1;
+  overflow-y: auto; /* Only this section should scroll if needed */
+  height: calc(100vh - 72px - 32px); /* Adjusted to account for footer */
+}
+
+.dashboard-footer {
+  height: 32px;
+  flex-shrink: 0;
+  display: flex;
+  justify-content: flex-end;
+  z-index: 5;
+}
+
+.dashboard-card {
+  background-color: var(--card-bg);
+  padding: 2rem;
+  border-radius: 12px;
+  box-shadow: var(--shadow);
+  transition: background-color 0.3s ease;
+}
+
+.dashboard-card h2 {
+  margin-top: 0;
+  padding-bottom: 0.75rem;
+  border-bottom: 1px solid var(--border-color);
+  color: var(--text-color);
+}
+
+.workflow-list-empty {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding: 3rem 0;
+  color: var(--secondary-color);
+  text-align: center;
+}
+
+.loading-container {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  height: 100vh;
+  background-color: var(--background-color);
+  color: var(--text-color);
+}
+
+.loading-spinner {
+  border: 4px solid rgba(0, 0, 0, 0.1);
+  border-radius: 50%;
+  border-top: 4px solid var(--primary-color);
+  width: 40px;
+  height: 40px;
+  animation: spin 1s linear infinite;
+  margin-bottom: 1rem;
+}
+
+@keyframes spin {
+  0% { transform: rotate(0deg); }
+  100% { transform: rotate(360deg); }
+}
+
+/* Workflow list in main content */
+.workflow-list {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+  gap: 1rem;
+  margin-top: 1rem;
+}
+
+.workflow-item-card {
+  background-color: var(--card-bg);
+  border: 1px solid var(--border-color);
+  border-radius: 8px;
+  padding: 1rem;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+  transition: transform 0.2s, box-shadow 0.2s;
+  cursor: pointer;
+}
+
+.workflow-item-card:hover {
+  transform: translateY(-3px);
+  box-shadow: var(--shadow);
+}
+
+.workflow-item-card h3 {
+  margin: 0 0 0.5rem;
+  font-size: 1.1rem;
+}
+
+.workflow-date {
+  margin: 0;
+  font-size: 0.8rem;
+  color: var(--secondary-color);
+}
+
+/* Drag and drop styles */
+.workflows-droppable {
+  width: 100%;
+}
+
+
+@media (max-width: 768px) {
+  .main-content,
+  .dashboard-content {
+    padding-left: 0 !important;
+    margin-left: 0 !important;
+  }
+  .workflow-list {
+    grid-template-columns: repeat(auto-fill, minmax(420px, 1fr));
+  }
+}

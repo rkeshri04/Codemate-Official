@@ -1,0 +1,102 @@
+:root {
+  font-family: Inter, Avenir, Helvetica, Arial, sans-serif;
+  font-size: 16px;
+  line-height: 1.5;
+  font-weight: 400;
+
+  font-synthesis: none;
+  text-rendering: optimizeLegibility;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  -webkit-text-size-adjust: 100%;
+}
+
+[data-theme="light"]{
+  --background-color: #fcfcfcec;
+  --text-color: #333;
+  --primary-color: #4A90E2;
+  --secondary-color: #6c757d;
+  --accent-color: #28a745;
+  --danger-color: #dc3545;
+  --card-bg: white;
+  --border-color: #dee2e6;
+  --input-bg: white;
+  --input-text: #333;
+  --shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+  --header-bg: white;
+}
+
+[data-theme="dark"] {
+  --background-color: #121212;
+  --text-color: rgba(255, 255, 255, 0.87);
+  --primary-color: rgba(74, 144, 226, 0.8);
+  --secondary-color: #a0aec0;
+  --accent-color: #48bb78;
+  --danger-color: #f56565;
+  --card-bg: #1e1e1e;
+  --border-color: #2d2d2d;
+  --input-bg: #333;
+  --input-text: #fff;
+  --shadow: 0 2px 8px rgba(0, 0, 0, 0.3);
+  --header-bg: #1a1a1a;
+}
+
+body {
+  margin: 0;
+  color: var(--text-color);
+  background-color: var(--background-color);
+  transition: background-color 0.3s ease, color 0.3s ease;
+  overflow: hidden; /* Prevent body scrolling */
+  height: 100vh;
+}
+
+html {
+  overflow: hidden; /* Prevent html scrolling */
+  height: 100%;
+}
+
+#root {
+  height: 100vh;
+  overflow: hidden; /* Prevent root div scrolling */
+}
+
+button {
+  cursor: pointer;
+  font-family: inherit;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+a {
+  color: var(--primary-color);
+  text-decoration: none;
+}
+
+a:hover {
+  text-decoration: underline;
+}
+
+/* Disable text selection for non-input elements */
+p, h1, h2, h3, h4, h5, h6, span, div:not(input, textarea, [contenteditable="true"]) {
+  user-select: none;
+}
+
+/* Enable text selection for input elements */
+input, textarea, [contenteditable="true"] {
+  user-select: text;
+}
+
+/* Add platform-specific styling */
+@media (platform: macos) {
+  .dashboard-container {
+    /* Add padding on top for macOS with hiddenInset titlebar */
+    padding-top: 32px;
+  }
+  
+  .dashboard-header {
+    /* Move header down to avoid overlap with traffic lights */
+    padding-top: 15px;
+  }
+}
