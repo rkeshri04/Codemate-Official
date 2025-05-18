@@ -922,3 +922,21 @@ input:checked + .toggle-slider:before {
   color: var(--button-disabled-text);
 }
 /* --- End New Styles --- */
+
+.custom-scrollbar-y {
+  scrollbar-width: thin;
+  scrollbar-color: var(--border-color) var(--card-bg);
+}
+.custom-scrollbar-y::-webkit-scrollbar {
+  width: 8px;
+  background: var(--card-bg);
+  border-radius: 6px;
+}
+.custom-scrollbar-y::-webkit-scrollbar-thumb {
+  background: var(--primary-color);
+  border-radius: 6px;
+}
+.custom-scrollbar-y::-webkit-scrollbar-track {
+  background: var(--card-bg);
+  border-radius: 6px;
+}

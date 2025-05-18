@@ -214,7 +214,7 @@ export function Dashboard() {
       {/* Sidebar */}
       <div
         ref={sidebarRef}
-        className={`sidebar ${sidebarCollapsed ? 'collapsed' : ''} app-region-no-drag`}
+        className={`sidebar custom-scrollbar-y ${sidebarCollapsed ? 'collapsed' : ''} app-region-no-drag`}
         style={{ width: sidebarCollapsed ? '60px' : `${sidebarWidth}px` }}
       >
         <SidebarHeader
@@ -245,7 +245,7 @@ export function Dashboard() {
       {/* Main content */}
       <div className="main-content">
         <MainHeader />
-        <div className="dashboard-content">
+        <div className="dashboard-content custom-scrollbar-y">
           {/* This is where nested routes will be rendered */}
           <Outlet context={{ workflows, setWorkflows, isLoading }} />
         </div>

@@ -1020,7 +1020,7 @@ const WorkflowDetail: React.FC = () => {
   return (
     <div className="workflow-detail-container">
       {/* <ToastContainer position="top-right" autoClose={5000} hideProgressBar={false} /> */}
-      <div className="workflow-detail-content">
+      <div className="workflow-detail-content custom-scrollbar-y">
         <div className="commands-section">
           <div className="section-header">
             <div className="workflow-title-section">
@@ -1076,7 +1076,7 @@ const WorkflowDetail: React.FC = () => {
                   <div 
                     {...provided.droppableProps}
                     ref={provided.innerRef}
-                    className="commands-list"
+                    className="commands-list custom-scrollbar-y"
                   >
                     {commands.map((cmd, index) => (
                       <React.Fragment key={cmd.id}>

@@ -4,7 +4,7 @@ import {
   RecentWorkflowsWidget,
   TrendingWidget,
   AnalyticsWidget,
-  ToolsCard
+  ToolsWidget
 } from './DashboardWidgets';
 
 const WorkflowsList: React.FC = ({}) => {
@@ -15,8 +15,7 @@ const WorkflowsList: React.FC = ({}) => {
         <RecentWorkflowsWidget workflows={workflows} setWorkflows={setWorkflows} isLoading={isLoading} />
         <TrendingWidget />
         <AnalyticsWidget workflows={workflows} setWorkflows={setWorkflows} isLoading={isLoading} />
-        <ToolsCard />
-        {/* <FrequentWorkflowsWidget /> */}
+        <ToolsWidget />
       </div>
     </div>
   );

@@ -1,7 +1,7 @@
 import React from 'react';
 import { FiZap, FiX, FiEye, FiDroplet, FiCode, FiTerminal, FiEdit2, FiTrash2, FiDownload, FiPlus, FiTag, FiPlay, FiGlobe, FiGitBranch, FiKey, FiHash, FiShield, FiLock, FiCopy, FiClock } from 'react-icons/fi';
 import { FaDocker, FaKey } from 'react-icons/fa';
-import './ToolsCard.css';
+import './ToolsWidget.css';
 
 // --- Markdown Tool (Markdown only, no text->markdown) ---
 const MarkdownTool: React.FC = () => {
@@ -1634,7 +1634,7 @@ const ToolInfoModal: React.FC<{
   </div>
 );
 
-const ToolsCard: React.FC = () => {
+const ToolsWidget: React.FC = () => {
   const [selectedTool, setSelectedTool] = React.useState<typeof CUSTOM_TOOLS[0] | null>(null);
 
   return (
@@ -1674,9 +1674,9 @@ const ToolsCard: React.FC = () => {
   );
 };
 
-export default ToolsCard;
+export default ToolsWidget;
 
-/* Add this at the end of the file or in your CSS file (ToolsCard.css):
+/* Add this at the end of the file or in your CSS file (ToolsWidget.css):
 
 .generator-tabs-scroll {
   scrollbar-width: thin;

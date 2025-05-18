@@ -165,11 +165,6 @@
   margin: 0.5rem 0;
 }
 
-.nav-section-header {
-  /* Remove old styles, now unused */
-  /* ...deleted... */
-}
-
 /* Unified section header for workflow and clipboard */
 .workflow-header,
 .clipboard-header {
@@ -672,4 +667,23 @@
   .workflow-list {
     grid-template-columns: repeat(auto-fill, minmax(420px, 1fr));
   }
+}
+
+/* Custom scrollbar styles */
+.custom-scrollbar-y {
+  scrollbar-width: thin;
+  scrollbar-color: var(--primary-color) var(--card-bg);
+}
+.custom-scrollbar-y::-webkit-scrollbar {
+  width: 8px;
+  background: var(--card-bg);
+  border-radius: 6px;
+}
+.custom-scrollbar-y::-webkit-scrollbar-thumb {
+  background: var(--primary-color);
+  border-radius: 6px;
+}
+.custom-scrollbar-y::-webkit-scrollbar-track {
+  background: var(--card-bg);
+  border-radius: 6px;
 }

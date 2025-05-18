@@ -5,10 +5,7 @@ import { FaFire } from 'react-icons/fa';
 import { executeWorkflow } from '../../../services/commandHandler';
 import { useNavigate } from 'react-router-dom';
 import { FiExternalLink, FiStar, FiGitBranch } from 'react-icons/fi';
-import { FiTerminal, FiGithub, FiDatabase, FiCloud, FiEdit, FiZap, FiGlobe, FiSettings, FiCode, FiMonitor, FiSearch, FiBook, FiCalendar, FiMail, FiBarChart2, FiClipboard, FiX } from 'react-icons/fi';
-import { FaDocker, FaSlack, FaTrello, FaFigma } from 'react-icons/fa';
-import { v4 as uuidv4 } from 'uuid';
-import ToolsCard from './widgets/ToolsCard';
+import ToolsWidget from './widgets/ToolsWidget';
 
 export const RecentWorkflowsWidget: React.FC<DashboardItemsContext> = ({ workflows, isLoading }) => {
   const [runningWorkflowId, setRunningWorkflowId] = useState<string | null>(null);
@@ -415,5 +412,5 @@ export const AnalyticsWidget: React.FC<DashboardItemsContext> = ({ workflows, is
   );
 };
 
-// Export ToolsCard for use in other parts of the app
-export { ToolsCard };
+// Export ToolsWidget for use in other parts of the app
+export { ToolsWidget };
