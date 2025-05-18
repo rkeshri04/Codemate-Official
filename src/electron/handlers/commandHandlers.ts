@@ -875,6 +875,54 @@ export function setupCommandHandlers(mainWindow: BrowserWindow, store: Store<any
     const timeSavedSeconds = store.get('timeSavedSeconds', 0);
     return { success: true, timeSavedSeconds };
   });
+
+  // --- Terms acceptance handlers ---
+  ipcMain.removeHandler('getTermsAccepted' as any);
+  ipcMainHandle('getTermsAccepted' as any, async () => {
+    const accepted = store.get('termsAccepted', false);
+    return { accepted };
+  });
+
+  ipcMain.removeHandler('setTermsAccepted' as any);
+  ipcMainHandle('setTermsAccepted' as any, async () => {
+    store.set('termsAccepted', true);
+    return { success: true };
+  });
+
+  // --- Privacy acceptance handlers ---
+  ipcMain.removeHandler('getPrivacyAccepted' as any);
+  ipcMainHandle('getPrivacyAccepted' as any, async () => {
+    const accepted = store.get('privacyAccepted', false);
+    return { accepted };
+  });
+
+  ipcMain.removeHandler('setPrivacyAccepted' as any);
+  ipcMainHandle('setPrivacyAccepted' as any, async () => {
+    store.set('privacyAccepted', true);
+    return { success: true };
+  });
+
+  // --- User Data Management ---
+  // Get value by key
+  ipcMain.removeHandler('getUserStoreValue' as any);
+  ipcMainHandle('getUserStoreValue' as any, async (data: { key: string }) => {
+    // Special handling for terminal snippets: try both electron-store and localStorage fallback
+    return store.get(data.key);
+  });
+
+  // Set value by key
+  ipcMain.removeHandler('setUserStoreValue' as any);
+  ipcMainHandle('setUserStoreValue' as any, async (data: { key: string, value: any }) => {
+    store.set(data.key, data.value);
+    return { success: true };
+  });
+
+  // Delete value by key
+  ipcMain.removeHandler('deleteUserStoreKey' as any);
+  ipcMainHandle('deleteUserStoreKey' as any, async (data: { key: string }) => {
+    store.delete(data.key);
+    return { success: true };
+  });
 }
 
 

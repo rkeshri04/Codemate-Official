@@ -3,13 +3,6 @@ type CommandType = 'app' | 'terminal' | 'url' | 'docker';
 
 type ConfirmModalProps =
   | {
-      // Logout modal props
-      type: 'logout';
-      isOpen: boolean;
-      onConfirm: () => void;
-      onCancel: () => void;
-    }
-  | {
       // Delete modal props
       type: 'delete';
       isOpen: boolean;
@@ -203,6 +196,13 @@ interface Window {
       executeWorkflowFromTray: (workflowId: string) => Promise<WorkflowRunResult>; 
       onWorkflowStepUpdate: (callback: (data: { commandId: string | null }) => void) => () => void; 
       getTimeSavedSeconds: () => Promise<{ success: boolean; timeSavedSeconds: number }>; // <-- Add this line
+      getTermsAccepted: () => Promise<{ accepted: boolean }>;
+      setTermsAccepted: () => Promise<{ success: boolean }>;
+      getPrivacyAccepted: () => Promise<{ accepted: boolean }>;
+      setPrivacyAccepted: () => Promise<{ success: boolean }>;
+      getUserStoreValue?: (data: { key: string }) => Promise<any>;
+      deleteUserStoreKey?: (data: { key: string }) => Promise<{ success: boolean }>;
+      setUserStoreValue?: (data: { key: string, value: any }) => Promise<{ success: boolean }>;
     };
 }
   

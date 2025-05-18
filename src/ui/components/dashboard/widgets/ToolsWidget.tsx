@@ -1,6 +1,6 @@
 import React from 'react';
 import { FiZap, FiX, FiEye, FiDroplet, FiCode, FiTerminal, FiEdit2, FiTrash2, FiDownload, FiPlus, FiTag, FiPlay, FiGlobe, FiGitBranch, FiKey, FiHash, FiShield, FiLock, FiCopy, FiClock } from 'react-icons/fi';
-import { FaDocker, FaKey } from 'react-icons/fa';
+import { FaDocker } from 'react-icons/fa';
 import './ToolsWidget.css';
 
 // --- Markdown Tool (Markdown only, no text->markdown) ---
@@ -1291,17 +1291,67 @@ const DockerfileGeneratorTool: React.FC = () => {
     }
   }, [lang]);
 
+  // Helper: Add language-specific dependency install steps
+  function getDependencyInstallLines(lang: string): string[] {
+    switch (lang) {
+      case 'node':
+        return [
+          'COPY package*.json ./',
+          'RUN npm install --production',
+        ];
+      case 'python':
+        return [
+          'COPY requirements.txt ./',
+          'RUN pip install --no-cache-dir -r requirements.txt',
+        ];
+      case 'go':
+        return [
+          'COPY go.mod .',
+          'COPY go.sum .',
+          'RUN go mod download',
+        ];
+      case 'java':
+        return [
+          '# Assuming you have a build step outside Docker and just copy the jar',
+        ];
+      case 'rust':
+        return [
+          'COPY Cargo.toml .',
+          'COPY Cargo.lock .',
+          'RUN cargo fetch',
+        ];
+      case 'php':
+        return [
+          'COPY composer.json ./',
+          'RUN composer install --no-dev --optimize-autoloader',
+        ];
+      case 'ruby':
+        return [
+          'COPY Gemfile* ./',
+          'RUN bundle install --without development test',
+        ];
+      default:
+        return [];
+    }
+  }
+
   const dockerfile = React.useMemo(() => {
     let lines: string[] = [];
     if (baseImage) lines.push(`FROM ${baseImage}`);
     if (workdir) lines.push(`WORKDIR ${workdir}`);
+
+    // Dependency install steps before copying all files
     if (copyAll) {
+      lines.push(...getDependencyInstallLines(lang));
       lines.push(`COPY . .`);
     } else {
+      // If not copying all, still try to install deps if possible
+      lines.push(...getDependencyInstallLines(lang));
       copyFiles.forEach(f => {
         if (f.src && f.dest) lines.push(`COPY ${f.src} ${f.dest}`);
       });
     }
+
     envVars.forEach(({ key, value }) => {
       if (key) lines.push(`ENV ${key}=${value}`);
     });
@@ -1309,10 +1359,19 @@ const DockerfileGeneratorTool: React.FC = () => {
       if (cmd.trim()) lines.push(`RUN ${cmd}`);
     });
     if (expose) lines.push(`EXPOSE ${expose}`);
-    if (entrypoint) lines.push(`ENTRYPOINT [${JSON.stringify(entrypoint)}]`);
-    if (cmd) lines.push(`CMD [${cmd.split(' ').map(s => JSON.stringify(s)).join(', ')}]`);
+    // ENTRYPOINT as JSON array if not empty
+    if (entrypoint && entrypoint.trim()) {
+      // Split by spaces, but handle quoted arguments
+      const entryArr = entrypoint.match(/(?:[^\s"]+|"[^"]*")+/g) || [];
+      lines.push(`ENTRYPOINT [${entryArr.map(s => JSON.stringify(s.replace(/^"(.*)"$/, '$1'))).join(', ')}]`);
+    }
+    // CMD as JSON array if not empty
+    if (cmd && cmd.trim()) {
+      const cmdArr = cmd.match(/(?:[^\s"]+|"[^"]*")+/g) || [];
+      lines.push(`CMD [${cmdArr.map(s => JSON.stringify(s.replace(/^"(.*)"$/, '$1'))).join(', ')}]`);
+    }
     return lines.join('\n');
-  }, [baseImage, workdir, copyAll, copyFiles, envVars, runCmds, expose, cmd, entrypoint]);
+  }, [baseImage, workdir, copyAll, copyFiles, envVars, runCmds, expose, cmd, entrypoint, lang]);
 
   const handleCopy = () => {
     navigator.clipboard.writeText(dockerfile);
@@ -1675,24 +1734,3 @@ const ToolsWidget: React.FC = () => {
 };
 
 export default ToolsWidget;
-
-/* Add this at the end of the file or in your CSS file (ToolsWidget.css):
-
-.generator-tabs-scroll {
-  scrollbar-width: thin;
-  scrollbar-color: var(--primary-color) var(--card-bg);
-}
-.generator-tabs-scroll::-webkit-scrollbar {
-  height: 8px;
-  background: var(--card-bg);
-  border-radius: 6px;
-}
-.generator-tabs-scroll::-webkit-scrollbar-thumb {
-  background: var(--primary-color);
-  border-radius: 6px;
-}
-.generator-tabs-scroll::-webkit-scrollbar-track {
-  background: var(--card-bg);
-  border-radius: 6px;
-}
-*/

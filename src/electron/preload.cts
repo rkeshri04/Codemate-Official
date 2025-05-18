@@ -158,6 +158,15 @@ contextBridge.exposeInMainWorld('electron', {
   // Add this line to expose trending/news fetch to renderer
   getTrendingContent: () => ipcRenderer.invoke('getTrendingContent'),
   getTimeSavedSeconds: () => ipcRenderer.invoke('getTimeSavedSeconds'),
+  getTermsAccepted: () => ipcRenderer.invoke('getTermsAccepted'),
+  setTermsAccepted: () => ipcRenderer.invoke('setTermsAccepted'),
+  getPrivacyAccepted: () => ipcRenderer.invoke('getPrivacyAccepted'),
+  setPrivacyAccepted: () => ipcRenderer.invoke('setPrivacyAccepted'),
+
+  // Get user store value by key
+  getUserStoreValue: (data: { key: string }) => ipcRenderer.invoke('getUserStoreValue', data),
+  deleteUserStoreKey: (data: { key: string }) => ipcRenderer.invoke('deleteUserStoreKey', data),
+  setUserStoreValue: (data: { key: string, value: any }) => ipcRenderer.invoke('setUserStoreValue', data),
 });
 
 // Set up listeners for menu actions

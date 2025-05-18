@@ -1,5 +1,3 @@
-import React from 'react';
-
 interface Props {
   open: boolean;
   type: 'terms' | 'privacy' | null;
@@ -35,6 +33,7 @@ export function TermsPrivacyModal({ open, type, onClose }: Props) {
           overflowY: 'auto',
           position: 'relative'
         }}
+        className="terms-privacy-modal-content"
         onClick={e => e.stopPropagation()}
       >
         <button
@@ -55,7 +54,7 @@ export function TermsPrivacyModal({ open, type, onClose }: Props) {
         <h2 style={{ marginTop: 0, marginBottom: 8, fontSize: 22 }}>
           {type === 'terms' ? 'Terms & Conditions' : 'Privacy Policy'}
         </h2>
-        <p style={{ fontSize: 13, marginBottom: 16, color: 'gray' }}>Last Updated: April 2025</p>
+        <p style={{ fontSize: 13, marginBottom: 16, color: 'gray' }}>Last Updated: May 2025</p>
 
         <div style={{ fontSize: 15, lineHeight: 1.7 }}>
           {type === 'terms' ? (
@@ -68,7 +67,6 @@ export function TermsPrivacyModal({ open, type, onClose }: Props) {
               <ul>
                 <li>The App allows users to run predefined or custom system commands, launch applications, open URLs, initiate Docker containers, and access development tools.</li>
                 <li>Any command or action executed through the App is at the sole discretion and risk of the user. You acknowledge and accept full responsibility for the consequences of executing commands, especially those that may affect your system's security, stability, or data.</li>
-                <li>The App includes optional sign-in via third-party authentication providers (Google, Microsoft, GitHub) and supports traditional email/password login. These are implemented solely for user identification and access management.</li>
                 <li>The App includes a local clipboard feature that stores up to 20 recent clipboard entries on the user’s device. This data is not transmitted, shared, or synchronized externally.</li>
               </ul>
 
@@ -97,7 +95,6 @@ export function TermsPrivacyModal({ open, type, onClose }: Props) {
               <ul>
                 <li>The App does not collect, store, transmit, or sell any personal data to any third parties under any circumstances.</li>
                 <li>All clipboard data, command history, and settings remain stored locally on your device and are never shared or uploaded.</li>
-                <li>Sign-in services via Google, Microsoft, GitHub, or email/password are used solely for authentication purposes. The App does not access, collect, or use any additional personal data from those services.</li>
                 <li>No telemetry, tracking, cookies, analytics, or behavioral profiling tools are embedded within the App.</li>
               </ul>
 

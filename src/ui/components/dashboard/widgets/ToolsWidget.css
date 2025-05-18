@@ -111,18 +111,37 @@ input.tool-input {
   background-color: var(--secondary-color);
 }
 
+.action-modal-overlay {
+  position: fixed;
+  top: 0; left: 0; right: 0; bottom: 0;
+  background: rgba(0,0,0,0.35);
+  z-index: 9999;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.action-modal-content {
+  background: var(--card-bg, #fff);
+  color: var(--text-color, #222);
+  border-radius: 12px;
+  box-shadow: 0 2px 16px rgba(0,0,0,0.15);
+  padding: 32px;
+  max-width: 580px;
+  width: 90%;
+  max-height: 80vh;
+  overflow: hidden;
+  position: relative;
+  display: flex;
+  flex-direction: column;
+}
+
 @media (max-width: 900px) {
   .action-modal-content {
     min-width: 0 !important;
     max-width: 98vw !important;
     width: 98vw !important;
     padding: 1rem !important;
-  }
-  .tool-modal-body {
-    padding: 0 !important;
-    min-width: 0 !important;
-    max-width: 100vw !important;
-    overflow-x: auto;
   }
 }
 
@@ -132,11 +151,5 @@ input.tool-input {
     max-width: 100vw !important;
     width: 100vw !important;
     padding: 0.5rem !important;
-  }
-  .tool-modal-body {
-    padding: 0 !important;
-    min-width: 0 !important;
-    max-width: 100vw !important;
-    overflow-x: auto;
   }
 }

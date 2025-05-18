@@ -1,11 +1,13 @@
 import React, { useState, useRef, useEffect } from 'react';
-import { FiUser, FiMoon, FiSun } from 'react-icons/fi';
+import { FiUser, FiMoon, FiSun, FiTrash2 } from 'react-icons/fi';
 import { useTheme } from '../../../context/ThemeContext';
+import DeleteDataModal from '../modals/DeleteDataModal';
 
 
 const MainHeader: React.FC = ({ }) => {
   const { theme, toggleTheme } = useTheme();
   const [showUserMenu, setShowUserMenu] = useState(false);
+  const [showDeleteModal, setShowDeleteModal] = useState(false);
   const userMenuRef = useRef<HTMLDivElement>(null);
 
   const toggleUserMenu = (e: React.MouseEvent) => {
@@ -47,10 +49,21 @@ const MainHeader: React.FC = ({ }) => {
                 {theme === 'light' ? <FiMoon className="menu-icon" /> : <FiSun className="menu-icon" />}
                 {theme === 'light' ? <span>Toggle dark mode</span> : <span>Toggle light mode</span>}
               </button>
+              <button
+                className="menu-item"
+                onClick={() => { setShowDeleteModal(true); setShowUserMenu(false); }}
+                style={{ color: 'var(--danger-color, #e53e3e)' }}
+              >
+                <FiTrash2 className="menu-icon" />
+                <span>Delete Data</span>
+              </button>
             </div>
           )}
         </div>
       </div>
+      {showDeleteModal && (
+        <DeleteDataModal open={showDeleteModal} onClose={() => setShowDeleteModal(false)} />
+      )}
     </header>
   );
 };

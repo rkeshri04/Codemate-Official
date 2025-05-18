@@ -16,7 +16,6 @@ export function Dashboard() {
   const { theme, toggleTheme } = useTheme(); // Keep theme logic if needed at this level
   const [sidebarCollapsed, setSidebarCollapsed] = useState(false);
   const [showWorkflowModal, setShowWorkflowModal] = useState(false);
-  const [showLogoutModal, setShowLogoutModal] = useState(false);
   const [sidebarWidth, setSidebarWidth] = useState(250);
   const [workflows, setWorkflows] = useState<Workflow[]>([]);
   const [workflowsVisible, setWorkflowsVisible] = useState(true);
@@ -113,8 +112,6 @@ export function Dashboard() {
 
   const openWorkflowModal = () => setShowWorkflowModal(true);
   const closeWorkflowModal = () => setShowWorkflowModal(false);
-  const confirmLogout = () => setShowLogoutModal(true);
-  const cancelLogout = () => setShowLogoutModal(false);
 
   const handleWorkflowCreated = (workflow: Workflow) => setWorkflows(prev => [workflow, ...prev]);
 
@@ -210,8 +207,6 @@ export function Dashboard() {
   // --- Render ---
   return (
     <div className="dashboard-container">
-      {/* <ToastContainer position="top-right" autoClose={5000} hideProgressBar={false} /> */}
-      {/* Sidebar */}
       <div
         ref={sidebarRef}
         className={`sidebar custom-scrollbar-y ${sidebarCollapsed ? 'collapsed' : ''} app-region-no-drag`}
