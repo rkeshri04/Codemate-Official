@@ -1,6 +1,7 @@
 # **Codemate - Your Productivity Powerhouse**
 
 **Codemate** is a lightweight, free, and open-source utility application designed to streamline your workflow and boost your productivity. It helps you quickly launch applications, execute terminal commands, open websites, manage Docker containers, capture screenshots and access clipboard history
+
 ## **Features**
 
 * **Application Launcher:** Quickly launch your favorite applications with simple shortcuts.  
@@ -14,31 +15,66 @@
 * **Forever Free:** This application will always be free to use.  
 * **No Ads, No Data Selling:** Your privacy is important. We don't display ads or sell your data.
 
-## **Installation**
+---
 
-### **Prerequisites**
+## **Getting Started (Development)**
 
-* \[List any prerequisites here, such as operating system versions, specific software, or dependencies. For example:\]  
-  * Windows 10 or later  
-  * macOS 10.15 or later  
-  * Docker Desktop (if you intend to use the Docker features)
+### **Download & Install**
 
-### **Download**
+1. **Clone the repository:**
+   ```sh
+   git clone https://github.com/rkeshri04/Codemate-Official.git
+   cd Codemate-Official/v1/dev/frontend
+   ```
 
-You can download the latest version of Codemate from the [Official Website](https://github.com/yourusername/yourrepository/releases).
+2. **Install dependencies:**
+   ```sh
+   npm install
+   ```
 
-### **Installation Instructions**
+### **Run Locally (Development Mode)**
 
-* **Windows:**  
-  1. Download the Codemate-Setup-x.x.x.exe file.  
-  2. Run the installer and follow the on-screen instructions.  
-* **macOS:**  
-  1. Download the Codemate-x.x.x.dmg file.  
-  2. Open the DMG file and drag the Codemate application to your Applications folder.  
-* **Linux:**  
-  1. Download the appropriate .AppImage or package for your distribution.  
-  2. Make the AppImage executable: chmod \+x Codemate-x.x.x.AppImage  
-  3. Run the AppImage: ./Codemate-x.x.x.AppImage
+This will start both the React frontend and Electron in development mode with hot reload:
+
+```sh
+npm run dev
+```
+
+- The React app runs on [http://localhost:5123](http://localhost:5123) (or similar).
+- Electron will open the desktop app window automatically.
+
+### **Build for Production**
+
+#### **Build the React and Electron code:**
+
+```sh
+npm run build
+npm run transpile:electron
+```
+
+#### **Create a packaged build for your platform:**
+
+- **macOS (Apple Silicon):**
+  ```sh
+  npm run dist:mac
+  ```
+  Output: `.dmg` file in the `dist/` directory.
+
+- **Windows (x64):**
+  ```sh
+  npm run dist:win
+  ```
+  Output: `.exe` and `.msi` files in the `dist/` directory.
+
+- **Linux (x64):**
+  ```sh
+  npm run dist:linux
+  ```
+  Output: `.AppImage` file in the `dist/` directory.
+
+> **Note:** You need to have the appropriate platform (macOS, Windows, or Linux) to build for that OS natively.
+
+---
 
 ## **Usage**
 
@@ -47,25 +83,13 @@ You can download the latest version of Codemate from the [Official Website](http
 3. **Configure Settings:** Customize the app to your preferences, including shortcuts, actions, and appearance.  
 4. **Start Using the Features:** Use the application launcher, terminal command execution, and other features to streamline your workflow. Refer to the in-app help or online documentation for detailed usage instructions.
 
-## **Contributing**
-
-Contributions are welcome\! If you'd like to contribute to Codemate, please follow these steps:
-
-1. **Fork the Repository:** Fork the repository on GitHub.  
-2. **Create a Branch:** Create a new branch for your feature or bug fix.  
-3. **Make Changes:** Make your changes and commit them with clear and concise commit messages.  
-4. **Test Your Changes:** Ensure your changes are working correctly and do not introduce any new issues.  
-5. **Submit a Pull Request:** Submit a pull request to the main branch of the original repository.
-
-Please read the [Contributing Guidelines](http://docs.google.com/CONTRIBUTING.md) for more detailed information.
-
 ## **Bug Reports**
 
-If you encounter any bugs or issues, please submit a bug report on the [GitHub Issue Tracker](https://github.com/yourusername/yourrepository/issues). Be sure to include detailed information about the problem, including steps to reproduce it, your operating system version, and any relevant error messages.
+If you encounter any bugs or issues, please submit a bug report on the [GitHub Issue Tracker](https://github.com/rkeshri04/Codemate-Official/issues). Be sure to include detailed information about the problem, including steps to reproduce it, your operating system version, and any relevant error messages.
 
 ## **Feature Requests**
 
-If you have any ideas for new features or improvements, please submit a feature request on the [GitHub Issue Tracker](https://github.com/yourusername/yourrepository/issues).
+If you have any ideas for new features or improvements, please submit a feature request on the [GitHub Issue Tracker](https://github.com/rkeshri04/Codemate-Official/issues).
 
 ## **License**
 
